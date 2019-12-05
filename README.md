@@ -1,2 +1,2 @@
-# TG-Equipo2
+# Proyecto - Equipo2
 ProgII-2019
