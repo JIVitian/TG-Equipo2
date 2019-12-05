@@ -18,7 +18,7 @@ public enum NotaAprobacion {
      */                
     private NotaAprobacion(String valor) {
         this.valor = valor;
-    }            
+    }
     
     /**
      * Devuelve la constante como cadena

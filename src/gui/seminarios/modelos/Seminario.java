@@ -6,6 +6,8 @@
 package gui.seminarios.modelos;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Seminario {
     private LocalDate fechaExposicion;
@@ -63,5 +65,38 @@ public class Seminario {
      */
     public void asignarObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.fechaExposicion);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Seminario other = (Seminario) obj;
+        return Objects.equals(this.fechaExposicion, other.fechaExposicion);
+    }
+    
+    public void mostrar(){
+        String formato = "dd/MM/yyyy";
+        String fFormateada = fechaExposicion.format(DateTimeFormatter.ofPattern(formato));
+        NotaAprobacion unaNota = Enum.valueOf(NotaAprobacion.class,notaAprobacion.toString());
+        System.out.print("Seminario rendido el: " + fFormateada + " Nota: " + unaNota);
+        if(notaAprobacion.equals(NotaAprobacion.APROBADO_CO))
+            System.out.println(" Observaciones: " + observaciones);
+        if(notaAprobacion.equals(NotaAprobacion.APROBADO_SO))
+            System.out.println(" Observaciones: -");
     }
 }
