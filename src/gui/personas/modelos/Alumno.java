@@ -37,4 +37,49 @@ public class Alumno extends Persona {
     public void asignarCX(String cx) {
         this.cx = cx;
     }
+
+    /**
+     * Devuelve el hashcode de un alumno
+     * @return int  - hashcode de un alumno
+     */
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.cx);
+        return hash;
+    }
+
+    /**
+     * Compara si 2 personas son iguales o no según el documento
+     * Si ambas personas a comparar son alumnos, se compara tambien su CX
+     * @param obj objeto contra el cual comparar
+     * @return boolean  - resultado de la comparación
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass().getSuperclass() != obj.getClass().getSuperclass()) {
+            return false;
+        }
+        if(obj.getClass() == Profesor.class){
+            final Persona other1 = (Persona) obj;
+            if(this.verDNI() != other1.verDNI()){
+                return false;
+            }
+        }
+        if(obj.getClass() == Alumno.class){
+            final Alumno other = (Alumno) obj;
+            if(!Objects.equals(this.cx,other.cx) && this.verDNI() != other.verDNI()){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
 }
