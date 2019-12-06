@@ -13,7 +13,7 @@ import gui.seminarios.modelos.ModeloTabla;
 import gui.seminarios.modelos.Seminario;
 import gui.seminarios.vistas.VentanaSeminarios;
 import gui.trabajos.modelos.Trabajo;
-import gui.trabajos.vistas.VentanaTrabajos;
+//import gui.trabajos.vistas.VentanaTrabajos;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.JTable;
