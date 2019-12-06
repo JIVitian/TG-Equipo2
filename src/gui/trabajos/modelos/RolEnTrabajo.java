@@ -7,8 +7,9 @@ package gui.trabajos.modelos;
 
 import gui.personas.modelos.Profesor;
 import java.time.LocalDate;
+import java.util.Objects;
 
-public class RolEnTrabajo {
+public class RolEnTrabajo implements Comparable<RolEnTrabajo>{
     private Profesor profesor;
     private Rol rol;
     private LocalDate fechaDesde;
@@ -102,5 +103,43 @@ public class RolEnTrabajo {
      */    
     public void asignarRazon(String razon) {
         this.razon = razon;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.profesor);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RolEnTrabajo other = (RolEnTrabajo) obj;
+        if (!Objects.equals(this.profesor, other.profesor)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(RolEnTrabajo ret) {
+        if (this.rol.compareTo(ret.rol) == 0) { //SI LOS ROLES SON IGUALES COMPARA LAS FECHAS
+            if (this.fechaDesde.compareTo(ret.fechaDesde) == 0) {
+                return this.profesor.compareTo(ret.profesor); //SI LAS FECHAS SON IGUALES COMPARA SEGUN EL PROFESOR
+            } else {
+                return this.fechaDesde.compareTo(ret.fechaDesde); //SI LAS FECHAS SON DISTINTAS LAS COMPARA
+            }
+        } else {
+            return this.rol.compareTo(ret.rol); //SI LOS ROLES SON DISTINTOS LOS COMPARA
+        }
     }
 }

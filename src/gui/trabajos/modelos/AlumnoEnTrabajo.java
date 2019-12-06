@@ -7,8 +7,9 @@ package gui.trabajos.modelos;
 
 import gui.personas.modelos.Alumno;
 import java.time.LocalDate;
+import java.util.Objects;
 
-public class AlumnoEnTrabajo {
+public class AlumnoEnTrabajo implements Comparable<AlumnoEnTrabajo>{
     private Alumno alumno;
     private LocalDate fechaDesde;
     private LocalDate fechaHasta;
@@ -89,5 +90,39 @@ public class AlumnoEnTrabajo {
      */        
     public void asignarRazon(String razon) {
         this.razon = razon;
-    }    
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.alumno);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AlumnoEnTrabajo other = (AlumnoEnTrabajo) obj;
+        if (!Objects.equals(this.alumno, other.alumno)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(AlumnoEnTrabajo aet) {
+        if (this.fechaDesde.compareTo(aet.fechaDesde) == 0) {
+            return this.alumno.compareTo(aet.alumno); //SI LAS FECHAS SON IGUALES COMPARA SEGUN LOS ALUMNOS
+        } else{
+            return this.fechaDesde.compareTo(aet.fechaDesde); //SI LAS FECHAS SON DISTINTAS LAS COMPARA
+        }
+    }
 }

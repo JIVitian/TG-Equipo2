@@ -5,10 +5,10 @@
  */
 package gui.trabajos.modelos;
 
-public enum Rol {
-    TUTOR("Tutor"),
-    COTUTOR("Cotutor"),
-    JURADO("Jurado");
+public enum Rol{
+    TUTOR("TUTOR"),
+    COTUTOR("COTUTOR"),
+    JURADO("JURADO");
     
     private String valor;
     
@@ -20,6 +20,10 @@ public enum Rol {
         this.valor = valor;
     }            
     
+    public String getValor() {
+        return valor;
+    }
+
     /**
      * Devuelve la constante como cadena
      * @return String  - constante como cadena
@@ -27,5 +31,5 @@ public enum Rol {
     @Override
     public String toString() {
         return this.valor;
-    }                    
+    }
 }
