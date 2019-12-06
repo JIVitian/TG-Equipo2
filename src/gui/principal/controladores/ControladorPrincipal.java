@@ -7,7 +7,9 @@ package gui.principal.controladores;
 
 import gui.areas.controladores.ControladorAreas;
 import gui.interfaces.IControladorAreas;
+import gui.interfaces.IControladorPersonas;
 import gui.interfaces.IControladorPrincipal;
+import gui.personas.controladores.ControladorPersonas;
 import gui.principal.vistas.VentanaPrincipal;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
@@ -40,6 +42,7 @@ public class ControladorPrincipal implements IControladorPrincipal {
      */                            
     @Override
     public void btnPersonasClic(ActionEvent evt) {
+        IControladorPersonas controlador = new ControladorPersonas(this.ventana);
     }
 
     /**
