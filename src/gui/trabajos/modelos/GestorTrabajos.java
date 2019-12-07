@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class GestorTrabajos implements IGestorTrabajos {
+    public static final String DUPLICADOS = "Ya existe un trabajo con ese nombre";
     private final String NOMBRE_ARCHIVO = "./Trabajos.txt";
     //nombre del archivo con los trabajos    
     private final char SEPARADOR = ';'; 
@@ -385,7 +386,9 @@ public class GestorTrabajos implements IGestorTrabajos {
         }
         
         if (this.trabajos.contains(trabajo)) {
-            this.ultimoTrabajo = this.trabajos.indexOf(trabajo);
+//            this.ultimoTrabajo = this.trabajos.indexOf(trabajo);
+            this.cancelar();
+
             this.trabajos.remove(trabajo);
             //        this.ultimoTrabajo = this.trabajos.size()-1; //Ultimo trabajo en la lista
 //            ordenar(this.trabajos);

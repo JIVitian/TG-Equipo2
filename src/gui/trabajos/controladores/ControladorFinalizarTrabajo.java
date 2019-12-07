@@ -49,10 +49,11 @@ public class ControladorFinalizarTrabajo {
             if (!resultado.equals(IGestorTrabajos.EXITO)) {
                 gsT.cancelar();
                 JOptionPane.showMessageDialog(null, resultado, "", JOptionPane.ERROR_MESSAGE);
-        }
-        else
+            }
+            else{
             JOptionPane.showMessageDialog(this.ventana, "El trabajo se finalizo exitosamente", "", JOptionPane.PLAIN_MESSAGE);
             this.ventana.dispose();
+            }
         }
         
 //        int confirmacion = JOptionPane.showConfirmDialog(ventana, "¿Desea finalizar el Trabajo?");

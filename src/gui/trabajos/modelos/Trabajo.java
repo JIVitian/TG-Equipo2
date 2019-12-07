@@ -443,7 +443,7 @@ public class Trabajo implements Comparable<Trabajo>{
      * @return List<Seminario>  - lista de seminarios ordenada según la fecha de exposición
      */
     public List<Seminario> verSeminarios() {
-        Collections.sort(this.seminarios);
+//        Collections.sort(this.seminarios);
         return this.seminarios;
     }
         

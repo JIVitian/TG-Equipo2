@@ -10,6 +10,7 @@ import gui.interfaces.IControladorAreas;
 import gui.interfaces.IControladorPersonas;
 import gui.interfaces.IControladorPrincipal;
 import gui.interfaces.IControladorTrabajos;
+import gui.personas.controladores.ControladorPersonas;
 import gui.principal.vistas.VentanaPrincipal;
 import gui.trabajos.controladores.ControladorTrabajos;
 import java.awt.event.ActionEvent;

@@ -68,6 +68,13 @@ public class VentanaTrabajos extends JDialog {
         jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Trabajos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
@@ -241,7 +248,7 @@ public class VentanaTrabajos extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnVolver.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnVolver.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,6 +322,10 @@ public class VentanaTrabajos extends JDialog {
     private void btnSeminariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeminariosActionPerformed
         this.controlador.btnSeminariosClic(evt);
     }//GEN-LAST:event_btnSeminariosActionPerformed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        this.controlador.ventanaGanaFoco(evt);  
+    }//GEN-LAST:event_formWindowGainedFocus
 
     
     
