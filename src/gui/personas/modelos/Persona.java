@@ -5,7 +5,7 @@
  */
 package gui.personas.modelos;
 
-public abstract class Persona {
+public abstract class Persona implements Comparable<Persona>{
     private String apellidos;
     private String nombres;
     private int dni;
@@ -70,4 +70,52 @@ public abstract class Persona {
     public String toString() {
         return this.apellidos + ", " + this.nombres;
     }    
+
+    /**
+     * Devuelve el hashcode de una persona
+     * @return int  - hashcode de una persona
+     */
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + this.dni;
+        return hash;
+    }
+
+    /**
+     * Compara si 2 personas son iguales o no según el documento
+     * @param obj objeto contra el cual comparar
+     * @return boolean  - resultado de la comparación
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass().getSuperclass() != obj.getClass().getSuperclass()) {
+            return false;
+        }
+        final Persona other = (Persona) obj;
+        if (this.dni != other.dni) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Permite ordenar las personas por apellido
+     * En caso de tener el mismo apellido, las compara por nombre
+     * @param o objeto contra el cual comparar
+     * @return int  - resultado de la comparación
+     */
+    @Override
+    public int compareTo(Persona o) {
+        int resultApellido = this.apellidos.compareToIgnoreCase(o.verApellidos());
+        if(resultApellido == 0) //si los apellidos son iguales, se compara por nombre
+            return this.nombres.compareToIgnoreCase(o.verNombres());
+        return resultApellido;
+    }
 }

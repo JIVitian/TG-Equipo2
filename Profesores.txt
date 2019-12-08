@@ -1,0 +1,7 @@
+Bardin;Fabio Alejandro;21456789;JTP
+Guzman;Fernanda;20145632;TITULAR
+Lothbrok;Ragnar;12456378;TITULAR
+Nieto;Luis;23145632;TITULAR
+Polo;Marco;1258946;TITULAR
+Tannure;Gaston;21456325;JTP
+Younes;dawqaw;15478965;ASOCIADO
