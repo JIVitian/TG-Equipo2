@@ -190,12 +190,15 @@ public class GestorTrabajos implements IGestorTrabajos {
         //VERIFICA QUE EL AET NO SE ENCUENTRE EN OTRO TRABAJO
         for(AlumnoEnTrabajo aet1 : aet){
             for(Trabajo t : this.trabajos){
-                if (t.verFechaFinalizacion() != null) {
-                    for(AlumnoEnTrabajo aet2 : t.verAlumnos()){
-                        if (aet1.verAlumno().equals(aet2.verAlumno())) {
-                            return ERROR_ALUMNOS;
-                        }
+                if (t.verFechaFinalizacion() == null) {
+                    if(t.verAlumnos().contains(aet1)){
+                        return ERROR_ALUMNOS;
                     }
+//                    for(AlumnoEnTrabajo aet2 : t.verAlumnos()){
+//                        if (aet1.verAlumno().equals(aet2.verAlumno())) {
+//                            return ERROR_ALUMNOS;
+//                        }
+//                    }
                 }
             }
         }
@@ -473,17 +476,21 @@ public class GestorTrabajos implements IGestorTrabajos {
 //              return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE; //Esto se controla al crear un nuevo trabajo
 //          }
             if (alumno == null) {
+                this.cancelar();
                 return TRABAJO_FINALIZAR_ALUMNO_ERROR;
             }
             if (razon == null) {
-                    return TRABAJO_FINALIZAR_ALUMNO_ERROR;
+                this.cancelar();
+                return TRABAJO_FINALIZAR_ALUMNO_ERROR;
             }
             if (fechaHasta == null) {
+                this.cancelar();
                 return TRABAJO_FINALIZAR_ALUMNO_ERROR;
             }
 
             for(AlumnoEnTrabajo aet : trabajo.verAlumnosActuales()){
                 if (fechaHasta.isBefore(aet.verFechaDesde())) {
+                    this.cancelar();
                     return TRABAJO_FINALIZAR_ALUMNO_ERROR;
                 }
                 if (aet.verAlumno().equals(alumno)) {
@@ -505,6 +512,7 @@ public class GestorTrabajos implements IGestorTrabajos {
                 }
             }
         }
+        this.cancelar();
         return TRABAJO_INEXISTENTE;
     }                    
             
@@ -625,7 +633,7 @@ public class GestorTrabajos implements IGestorTrabajos {
                         String cadenaDNI = vector[i++];
                         int retDNI = Integer.parseInt(cadenaDNI);
                         
-                        var cadenaRol = vector[i++];
+                        String cadenaRol = vector[i++];
                         Rol retRol = this.convertirStringARol(cadenaRol);
                         
                         String cadenaFechaDesde = vector[i++];

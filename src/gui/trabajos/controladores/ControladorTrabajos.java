@@ -38,14 +38,14 @@ public class ControladorTrabajos implements IControladorTrabajos{
     private VentanaTrabajos ventana;
     GestorTrabajos gsT ;
     GestorAlumnosEnTrabajos gsAET ;
+    
+//sirven para manejar las tbalas
     private int trabajoSeleccionado;
     private int alumnoSeleccionado;
     private int profesorSeleccionado;
-    //sirve para manejar la tabla tablaAreas
     private String operacion;
     private final String ERROR_BORRAR = "No se pudo eliminar el trabajo seleccionado.";
     IControladorSeminarios cSeminarios;
-    private int bandera;
     
     /**
      * Constructor
@@ -53,7 +53,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
      * @param ventanaPadre ventana padre (VentanaPrincipal en este caso)
      */
     public ControladorTrabajos(Frame ventanaPadre) {
-        this.bandera = 0;
         this.operacion = OPERACION_NINGUNA;
         gsT = GestorTrabajos.instanciar();
         gsAET = GestorAlumnosEnTrabajos.instanciar();
@@ -88,6 +87,8 @@ public class ControladorTrabajos implements IControladorTrabajos{
                 ControladorFinalizarTrabajo controlador = new ControladorFinalizarTrabajo(this.ventana, trabajo);
             }else {
                 JOptionPane.showMessageDialog(null, "El trabajo ya ha sido finalizado previamente", "", JOptionPane.ERROR_MESSAGE);
+                this.operacion = OPERACION_MODIFICACION;
+                this.gsT.cancelar();
             }
             
         }else{
@@ -141,38 +142,51 @@ public class ControladorTrabajos implements IControladorTrabajos{
 
     @Override
     public void btnModificarProfesorClic(ActionEvent evt) {
-        if (ventana.getTablaProfesores().getSelectedRow() != -1) {//La notificacion saltara solo si un elemento de la tabla se encuentra seleccionado
+        this.trabajoSeleccionado = this.ventana.getTablaTrabajos().getSelectedRow();
+        this.alumnoSeleccionado = this.ventana.getTablaAlumnos().getSelectedRow();
+        this.profesorSeleccionado = this.ventana.getTablaProfesores().getSelectedRow();
+        
+        if (ventana.getTablaProfesores().getSelectedRow() != -1) {//La notificacion saltara solo si no se encuentra seleccionado un elemento de la tabla 
             Trabajo trabajo = trabajoSelecc();
             RolEnTrabajo profesor = trabajo.verProfesoresConRoles().get(this.ventana.getTablaProfesores().getSelectedRow());
             if(profesor.verRazon()==null){      //Controlo si el profesor ya ha sido finalizado
                 this.operacion = OPERACION_PROFESORES;
-                this.trabajoSeleccionado = this.ventana.getTablaTrabajos().getSelectedRow();
-                this.alumnoSeleccionado = this.ventana.getTablaAlumnos().getSelectedRow();
-                this.profesorSeleccionado = this.ventana.getTablaProfesores().getSelectedRow();
                 IControladorModificarProfesor controlador = new ControladorModificarProfesor(this.ventana, trabajo, profesor);
             }
             else {
                 JOptionPane.showMessageDialog(null, "El profesor ya ha sido finalizado", "", JOptionPane.ERROR_MESSAGE);
+                this.gsT.cancelar();
+                this.operacion = OPERACION_PROFESORES;
             }    
         }
         else {
+            this.operacion =OPERACION_PROFESORES;
+            this.gsT.cancelar();
             JOptionPane.showMessageDialog(ventana, "Debe seleccionar un Profesor.");
         }
     }
     @Override
     public void btnModificarAlumnoClic(ActionEvent evt) {
+        this.trabajoSeleccionado = this.ventana.getTablaTrabajos().getSelectedRow();
+        this.alumnoSeleccionado = this.ventana.getTablaAlumnos().getSelectedRow();
+        this.profesorSeleccionado = this.ventana.getTablaProfesores().getSelectedRow();
+        
         if (ventana.getTablaAlumnos().getSelectedRow() != -1) {//La notificacion saltara solo si un elemento de la tabla se encuentra seleccionado
             Trabajo trabajo = trabajoSelecc();
             AlumnoEnTrabajo alumno = trabajo.verAlumnos().get(this.ventana.getTablaAlumnos().getSelectedRow());
             if (alumno.verRazon() == null) {    //Controlo si el alumno ya ha sido finalizado
+                this.operacion = OPERACION_ALUMNOS;
                 IControladorModificarAlumno controlador = new ControladorModificarAlumno(this.ventana, trabajo, alumno);
-                this.refrescaralumnos(trabajo);
                 }
             else {
                 JOptionPane.showMessageDialog(null, "El alumno ya ha sido finalizado", "", JOptionPane.ERROR_MESSAGE);
+                this.gsT.cancelar();
+                this.operacion = OPERACION_ALUMNOS;
             }
         }
         else {
+            this.operacion = OPERACION_ALUMNOS;
+            this.gsT.cancelar();
             JOptionPane.showMessageDialog(ventana, "Debe seleccionar un Alumno.");
         }
     }
@@ -197,10 +211,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
                 this.alumnoSeleccionado = 0;
                 this.profesorSeleccionado = 0;
                 tablaT.setRowSelectionInterval(trabajoSeleccionado, trabajoSeleccionado);    //se selecciona el primer trabajo de la tabla trabajo
-//                refrescaralumnos(trabajoSelecc());      //se refresca la tabla de alumnos
-//                
-//                refrescarProfes(trabajoSelecc());      //se refresca la tabla de profesores
-                
             }
         }
         
@@ -208,7 +218,7 @@ public class ControladorTrabajos implements IControladorTrabajos{
             if (gsT.verUltimoTrabajo() == -1) {  //no se creó ningún trabajo
             if (this.trabajoSeleccionado != (-1)){ //si habia algo seleecionado anteriormente
                 System.out.println("yella");
-                this.operacion=OPERACION_NINGUNA;
+//                this.operacion=OPERACION_NINGUNA;
 //                tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se lo vuelve a seleccionar         
             }
                 
@@ -218,21 +228,19 @@ public class ControladorTrabajos implements IControladorTrabajos{
                 this.profesorSeleccionado = 0;
                 refrescarTrabajos(); //se refresca la tabla de Trabajos
                 tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo());    //se selecciona el trabajo creado
+//                this.operacion = OPERACION_NINGUNA;
             }   
         }
 
-        
         if(this.operacion.equals(OPERACION_MODIFICACION)){  //se vuleve de tratar de finalizar un trabajo.
             if (gsT.verUltimoTrabajo() != -1) {     //se finalizó un trabajo
                 this.refrescarTrabajos();    //se refresca la tabla 
                 tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
-            }else{
-                this.operacion=OPERACION_NINGUNA;
+//                this.operacion = OPERACION_NINGUNA;
+            }else{          //no se finalizo ningun trabajo
+//                this.operacion=OPERACION_NINGUNA;
             }
-//            refrescarTrabajos(); //se refresca las tablas
-//            tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-            }
-
+        }
 
         if(this.operacion.equals(OPERACION_BAJA)){  //se vuleve de tratar de eliminar un trabajo
             if (gsT.verUltimoTrabajo() != -1) {     //si se borro un trabajo
@@ -244,33 +252,42 @@ public class ControladorTrabajos implements IControladorTrabajos{
                     this.profesorSeleccionado = 0;
                     this.refrescarTrabajos();    //se refresca la tabla 
                     tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se selecciona el primer trabajo de la tabla
+//                    this.operacion = OPERACION_NINGUNA;
                 }
-                  
             }else{  //no se borro ningun trabajo
                 tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se selecciona el ultimo trabajo 
+//                this.operacion=OPERACION_NINGUNA;
             }
         }
-//        
 
-//
         if(this.operacion.equals(OPERACION_SEMINARIOS)){  //se vuleve de la ventana seminarios
-            this.refrescarTrabajos();
+            tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
+//            this.operacion=OPERACION_NINGUNA;
         }
         
-        if(this.operacion.equals(OPERACION_PROFESORES)){  //se vuleve de modificar un alumno
-            
-            this.refrescarTrabajos();
-            tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-            refrescarProfes(trabajoSelecc());
-            this.alumnoSeleccionado = 0;
-            this.profesorSeleccionado = 0;
+        if(this.operacion.equals(OPERACION_PROFESORES)){  //se vuleve de tratar de finalizar un profesor
+            if(this.gsT.verUltimoTrabajo() != -1){      //se finalizo un profesor
+                this.refrescarTrabajos();    //se refresca la tabla 
+                tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
+//                this.operacion = OPERACION_NINGUNA;
+            }else{      //no se finalizo un profesor
+//                this.operacion = OPERACION_NINGUNA;
+            }
         }
-//        if(this.operacion.equals(OPERACION_ALUMNOS)){  //se vuleve de modificar un alumno
-//            this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-//            refrescaralumnos(trabajoSelecc());
-//        }        
-//        
-//        
+        
+        if(this.operacion.equals(OPERACION_ALUMNOS)){  //se vuleve de tratar modificar un alumno
+            if(this.gsT.verUltimoTrabajo() != -1){      //se finalizo un alumno
+                this.refrescarTrabajos();    //se refresca la tabla 
+                tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
+            }else{      //no se finalizo un profesor
+//                this.operacion = OPERACION_NINGUNA;
+            }
+        }   
+        
+        
+        this.operacion = OPERACION_NINGUNA;
+        
+        
         
         
         
@@ -420,22 +437,14 @@ public class ControladorTrabajos implements IControladorTrabajos{
                         refrescaralumnos(trabajoSelecc());
                     }
                 }else               //se llama este metodo al ganar foco desde una ventana que no es el menu principal
-                {                   //la bandera es para solo refrescar y seleccionar una vez,ya que el listener recibe dos elementos: Un trabajo se desselecciona y uno se selecciona
-                    
-                    
-                    if (bandera == 1) {     //se acciona el evento de seleccionar un trabajo
+                {                   
                         System.out.println("alla viene de otro lado");
                         if (trabajoSelecc() != null) {
                         refrescarProfes(trabajoSelecc());   
                         refrescaralumnos(trabajoSelecc());
-                        this.operacion = OPERACION_NINGUNA;
-                        this.bandera=0;
+//                        this.bandera=0;
                         return;
                         }
-                    }
-                    if (this.bandera == 0) {        //se acciona el evento de desseleccionar un trabajo
-                        this.bandera = 1;  
-                    }
                 }
                 }
                 

@@ -38,10 +38,12 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
     private Trabajo unTrabajo;
     private RolEnTrabajo unRET;
     private GestorPersonas gsP;
+    private GestorTrabajos gsT;
 
     public ControladorModificarProfesor(Dialog ventanaPadre, Trabajo unTrabajo, RolEnTrabajo unRET) {
         this.unTrabajo = unTrabajo;
         this.unRET = unRET;
+        gsT = GestorTrabajos.instanciar();
         this.ventana = new VentanaModificarProfesor(this, ventanaPadre);
         gsP = GestorPersonas.instanciar();
         llenarComboBox ();
@@ -101,6 +103,7 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
      */ 
     @Override
     public void btnCancelarClic(ActionEvent evt) {
+        gsT.cancelar();
         this.ventana.dispose();
     }
 

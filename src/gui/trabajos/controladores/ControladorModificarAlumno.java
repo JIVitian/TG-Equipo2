@@ -55,7 +55,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         String razon = this.ventana.verTxtRazon().getText();
     
         IGestorTrabajos gsT = GestorTrabajos.instanciar();
-        int confirmacion = JOptionPane.showConfirmDialog(ventana, "¿Desea finalizar el Trabajo?");
+        int confirmacion = JOptionPane.showConfirmDialog(ventana, "¿Desea finalizar el Alumno?");
         if (confirmacion == 0) {//Si el usuario elige "Si" se procedera a midificar el trabajo seleccionado
         String resultado = gsT.finalizarAlumno(this.unTrabajo, this.unAET.verAlumno(), fechaHasta, razon);
         
@@ -71,8 +71,8 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
 
     @Override
     public void btnCancelarClic(ActionEvent evt) {
-//        IGestorTrabajos gsT = GestorTrabajos.instanciar();
-//        gsT.cancelar();
+        IGestorTrabajos gsT = GestorTrabajos.instanciar();
+        gsT.cancelar();
         this.ventana.dispose();
     }
 
