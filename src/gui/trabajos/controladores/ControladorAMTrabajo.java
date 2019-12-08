@@ -23,6 +23,7 @@ import gui.trabajos.modelos.Rol;
 import gui.trabajos.modelos.RolEnTrabajo;
 import gui.trabajos.modelos.Trabajo;
 import gui.trabajos.vistas.VentanaAMTrabajo;
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -31,7 +32,10 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
 
 
 public class ControladorAMTrabajo implements IControladorAMTrabajo{
@@ -54,7 +58,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         this.ventana = new VentanaAMTrabajo(this, ventanaPadre);
         refrescar();
         this.ventana.setTitle(IControladorTrabajos.TRABAJO_NUEVO);
-        
+        this.agregarListeners();
         this.ventana.setLocationRelativeTo(null);
         this.ventana.setVisible(true);
         
@@ -82,7 +86,13 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             new String [] {
                 "Area"
             }
-        ));
+        ){
+            @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
+            
+            public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+        });
 
         String profesores[] = new String[listaProfes.size()];           //Con este arreglo de cadenas armare los comboBox
         for (int i = 0; i < listaProfes.size(); i++) {
@@ -105,7 +115,13 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             new String [] {
                 "Jurado", "DNI"
             }
-        ));
+        ){
+            @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
+            
+            public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+        });
 
         String[][] matrizal = new String[(listaAlumnos.size())] [2];             //Llena la tabla de Alumnos
         for (int i = 0; i < listaAlumnos.size(); i++) {
@@ -120,7 +136,19 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             new String [] {
                 "Alumnos", "CX"
             }
-        ));
+        ){
+            @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
+            
+            public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+        });
+        
+        this.ventana.getjTablaAreas().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
+        this.ventana.getjTablaJurado().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
+        this.ventana.getjTablaAlumnos().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
+        
+        
     }
     
     
@@ -194,16 +222,19 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             listaAET.add(gsAET.nuevoAlumnoEnTrabajo(gsP.dameAlumno(cxAl), fechaP));
         }
         
+        //Tratar de crearlo
         String resultado = gsT.nuevoTrabajo(titulo, duracion, fechaP, fechaA, listaAreas, listaRET, listaAET);
-        if (!resultado.equals(EXITO)) {
-             JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.WARNING_MESSAGE);
+        if (!resultado.equals(EXITO)) { //No se pudo crear un trabajo
+            JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.WARNING_MESSAGE);
+            this.colorTxtDuracion();    //resalta en rojo los errores mas obvios
+            this.colorAreas();
+            this.colorAlumnos();
+            this.colorJurados();
+            this.colorCalendarios();
         } else {
             JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.INFORMATION_MESSAGE);
             this.ventana.dispose();
         }
-       
-        
-
     }
     
 
@@ -217,6 +248,53 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         IGestorTrabajos ga = GestorTrabajos.instanciar();
         ga.cancelar();
         this.ventana.dispose();
+    }
+    
+    private void agregarListeners(){
+        //-----------------------------------------------------------------------------------//
+        //Agrego listeners a los elementos de la ventana para marcar en rojo cuando esten mal//
+        //-----------------------------------------------------------------------------------//
+       
+        //Listener de txtTitulo
+        this.ventana.getTxtTitulo().addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                colorTxtTitulo();
+            }
+        });
+        
+        //Listener txtDuracion
+        this.ventana.getTxtDuracion().addFocusListener(new java.awt.event.FocusAdapter() {
+            JDialog ventana = this.ventana;
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                colorTxtDuracion();
+            }
+        });
+        
+        //Listener tablaAreas
+        this.ventana.getjTablaAreas().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {    //la tabla tiene un listener para saber cuando se cambia la seleccion
+            if (!e.getValueIsAdjusting()) {
+                colorAreas();
+            }
+        });
+        
+        //Listener tablaAlumnos
+        this.ventana.getjTablaAlumnos().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {    //la tabla tiene un listener para saber cuando se cambia la seleccion
+            if (!e.getValueIsAdjusting()) {
+                colorAlumnos();
+            }
+        });
+        
+        //Listener tablaJurados
+        this.ventana.getjTablaJurado().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {    //la tabla tiene un listener para saber cuando se cambia la seleccion
+            if (!e.getValueIsAdjusting()) {
+                colorJurados();
+            }
+        });
+        
+        
+        
     }
 
     /**
@@ -232,13 +310,20 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
                 case KeyEvent.VK_ENTER: 
                     this.btnGuardarClic(null);
                     break;
-                case KeyEvent.VK_BACK_SPACE:    
+                case KeyEvent.VK_ESCAPE:
+                    this.btnCancelarClic(null);
+                    break;
+                case KeyEvent.VK_BACK_SPACE:
+                    this.colorTxtDuracion();
+                    break;
                 case KeyEvent.VK_DELETE:
 //                case KeyEvent.VK_SPACE:
                     break;
                 default:
                     evt.consume(); //consume el evento para que no sea procesado por la fuente
             }
+        }else{  //La duracion es correcta, no lepongo verde o algo similar porque quedaria mal que elresto no se pueda poner verde
+            this.ventana.getTxtDuracion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
 
@@ -253,15 +338,24 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         if (!Character.isLetter(c)) { //sólo se aceptan letras, Enter, Del, Backspace y espacio
             switch(c) {
                 case KeyEvent.VK_ENTER: 
-                this.btnGuardarClic(null);
+                    this.btnGuardarClic(null);
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    this.btnCancelarClic(null);
                     break;
                 case KeyEvent.VK_BACK_SPACE:    
+                    colorTxtTitulo();
+                    break;
                 case KeyEvent.VK_DELETE:
+                    colorTxtTitulo();
+                    break;
                 case KeyEvent.VK_SPACE:
                     break;
                 default:
                     evt.consume(); //consume el evento para que no sea procesado por la fuente
             }
+        }else{//se escribe en elcampo, es posiblemente valido
+            this.ventana.getTxtTitulo().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
     
@@ -275,7 +369,59 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             return null;
     }
     
+    private void colorTxtTitulo(){
+        if (this.ventana.getTxtTitulo().getText().trim().isEmpty()) {
+            this.ventana.getTxtTitulo().setBorder(BorderFactory.createLineBorder(Color.RED, 2)); //si el campo de texto esta vacio,se resalta en rojo
+        }else{
+            this.ventana.getTxtTitulo().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
+        }
+    }
     
+    private void colorTxtDuracion(){
+        if (this.ventana.getTxtDuracion().getText().trim().isEmpty()) {
+            this.ventana.getTxtDuracion().setBorder(BorderFactory.createLineBorder(Color.RED, 2)); //si el campo de texto esta vacio,se resalta en rojo
+        }else{
+            this.ventana.getTxtDuracion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
+        }
+    }
+    
+    private void colorAreas(){
+        if (this.ventana.getjTablaAreas().getSelectedRows().length < 1) {   //si se selecciona menos de un area se resalta en rojo la tabla
+            this.ventana.getjTablaAreas().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getjTablaAreas().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+    }
+    
+    private void colorAlumnos(){
+        if (this.ventana.getjTablaAlumnos().getSelectedRows().length < 1) {   //si se selecciona menos de un alumno se resalta en rojo la tabla
+            this.ventana.getjTablaAlumnos().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getjTablaAlumnos().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+    }
+    
+    private void colorJurados(){
+        if (this.ventana.getjTablaJurado().getSelectedRows().length < 3 ||this.ventana.getjTablaJurado().getSelectedRows().length > 3) {   //si se selecciona menos o mas de 3 jurados se resalta en rojo la tabla
+                this.ventana.getjTablaJurado().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getjTablaJurado().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+    }
+    
+    private void colorCalendarios(){
+        if (this.ventana.getjFechaAprobacion().getCalendar() == null) {
+            this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+        
+        if (this.ventana.getjFechaPresentacion().getCalendar() == null) {
+            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+    }
     
     
 }

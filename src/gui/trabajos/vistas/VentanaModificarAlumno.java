@@ -8,6 +8,7 @@ package gui.trabajos.vistas;
 import com.toedter.calendar.JDateChooser;
 import gui.interfaces.IControladorModificarAlumno;
 import java.awt.Dialog;
+import java.awt.event.KeyEvent;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
@@ -15,7 +16,7 @@ import javax.swing.JTextField;
  *
  * @author danie
  */
-public class VentanaModificarAlumno extends JDialog {
+public class VentanaModificarAlumno extends JDialog{
     private IControladorModificarAlumno controlador;
 
     /**
@@ -157,4 +158,5 @@ public class VentanaModificarAlumno extends JDialog {
     private javax.swing.JLabel etqRazon;
     private javax.swing.JTextField txtRazon;
     // End of variables declaration//GEN-END:variables
+
 }

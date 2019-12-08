@@ -199,10 +199,13 @@ public class ControladorTrabajos implements IControladorTrabajos{
     public void btnVolverClic(ActionEvent evt) {
         this.ventana.dispose();
     }
-
     @Override
     public void ventanaGanaFoco(WindowEvent evt) {
         JTable tablaT = this.ventana.getTablaTrabajos();
+        
+        //----------------------------------------------//
+        //La ventana puede ganar foco en distintos casos//
+        //----------------------------------------------//
         
         if(this.operacion.equals(OPERACION_NINGUNA) ){      //si se entra a la ventana desde el menu principal
             refrescarTrabajos ();
@@ -216,19 +219,14 @@ public class ControladorTrabajos implements IControladorTrabajos{
         
         if (this.operacion.equals(OPERACION_ALTA)){     //se gana foco luego de tratar de crear un trabajo
             if (gsT.verUltimoTrabajo() == -1) {  //no se creó ningún trabajo
-            if (this.trabajoSeleccionado != (-1)){ //si habia algo seleecionado anteriormente
-                System.out.println("yella");
-//                this.operacion=OPERACION_NINGUNA;
-//                tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se lo vuelve a seleccionar         
-            }
-                
+                if (this.trabajoSeleccionado != (-1)){ //si habia algo seleecionado anteriormente
+                }
             }
             else {  //se creó un trabajo
                 this.alumnoSeleccionado = 0;
                 this.profesorSeleccionado = 0;
                 refrescarTrabajos(); //se refresca la tabla de Trabajos
                 tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo());    //se selecciona el trabajo creado
-//                this.operacion = OPERACION_NINGUNA;
             }   
         }
 
@@ -236,9 +234,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
             if (gsT.verUltimoTrabajo() != -1) {     //se finalizó un trabajo
                 this.refrescarTrabajos();    //se refresca la tabla 
                 tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
-//                this.operacion = OPERACION_NINGUNA;
-            }else{          //no se finalizo ningun trabajo
-//                this.operacion=OPERACION_NINGUNA;
             }
         }
 
@@ -252,26 +247,20 @@ public class ControladorTrabajos implements IControladorTrabajos{
                     this.profesorSeleccionado = 0;
                     this.refrescarTrabajos();    //se refresca la tabla 
                     tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se selecciona el primer trabajo de la tabla
-//                    this.operacion = OPERACION_NINGUNA;
                 }
             }else{  //no se borro ningun trabajo
                 tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se selecciona el ultimo trabajo 
-//                this.operacion=OPERACION_NINGUNA;
             }
         }
 
         if(this.operacion.equals(OPERACION_SEMINARIOS)){  //se vuleve de la ventana seminarios
             tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-//            this.operacion=OPERACION_NINGUNA;
         }
         
         if(this.operacion.equals(OPERACION_PROFESORES)){  //se vuleve de tratar de finalizar un profesor
             if(this.gsT.verUltimoTrabajo() != -1){      //se finalizo un profesor
                 this.refrescarTrabajos();    //se refresca la tabla 
                 tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
-//                this.operacion = OPERACION_NINGUNA;
-            }else{      //no se finalizo un profesor
-//                this.operacion = OPERACION_NINGUNA;
             }
         }
         
@@ -279,111 +268,10 @@ public class ControladorTrabajos implements IControladorTrabajos{
             if(this.gsT.verUltimoTrabajo() != -1){      //se finalizo un alumno
                 this.refrescarTrabajos();    //se refresca la tabla 
                 tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
-            }else{      //no se finalizo un profesor
-//                this.operacion = OPERACION_NINGUNA;
             }
         }   
-        
-        
         this.operacion = OPERACION_NINGUNA;
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-//        refrescarTrabajos();
-//        if (this.ventana.getTablaTrabajos().equals(new javax.swing.table.DefaultTableModel(     //si es igual al modelo que crea por default java
-//            new Object [][] {
-//                {null, null, null, null, null, null},
-//                {null, null, null, null, null, null},
-//                {null, null, null, null, null, null},
-//                {null, null, null, null, null, null}
-//            },
-//            new String [] {
-//                "Titulo", "Duracion", "Areas", "Presentacion", "Aprobacion", "Exposicion"
-//            }
-//        ))) {        //Todavia no se inicializo la tabla
-//            refrescarTrabajos ();
-//            this.ventana.getTablaTrabajos().setRowSelectionInterval(0, 0);    //se selecciona el ultimo trabajo
-//            refrescaralumnos(gsT.dameTrabajo(this.ventana.getTablaTrabajos().getValueAt(gsT.verUltimoTrabajo(), 0).toString()));    
-//        }
-//        
-//        
-//        else{
-//            if (this.operacion.equals(OPERACION_ALTA)){     //se gana foco luego de tratar de crear un trabajo
-//                if (gsT.verUltimoTrabajo() == -1) {  //no se creó ningún trabajo
-//                if (this.trabajoSeleccionado != (-1)) //si se habia seleecionado algo anteriormente
-//                    this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se selecciona el ultimo trabajo             
-//                }
-//                else {  //se creó un trabajo
-//                    refrescarTrabajos(); //se refresca la tabla
-//                    this.ventana.getTablaTrabajos().setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo());    //se selecciona el ultimo trabajo
-//                    refrescaralumnos(gsT.dameTrabajo(this.ventana.getTablaTrabajos().getValueAt(gsT.verUltimoTrabajo(), 0).toString()));    
-//                }   
-//            }
-//            
-//            if(this.operacion.equals(OPERACION_MODIFICACION)){  //se vuleve de finalizar un trabajo
-//                this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-//                }
-//            
-//            if(this.operacion.equals(OPERACION_BAJA)){  //se vuleve de eliminar un trabajo
-//                if (gsT.verUltimoTrabajo() == -1) {     //no se borro ningun trabajo
-//                    this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);     //se selecciona el ultimo trabajo   
-//                }else{  //si se borro un trabajo
-//                    refrescarTrabajos();
-//                    if (this.ventana.getTablaTrabajos().getRowCount() > 0){     //si es que queda algun trabajo
-//                        this.trabajoSeleccionado = 0;
-//                        this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);    //se selecciona el primer trabajo de la tabla
-//                    } else{
-//                        this.trabajoSeleccionado=-1;
-//                    }
-//                }
-//            }
-//            
-//            if(this.operacion.equals(OPERACION_SEMINARIOS)){  //se vuleve de la ventana seminarios
-//                
-//            }
-//            
-//            if(this.operacion.equals(OPERACION_NINGUNA)){  //se vuleve de eliminar un trabajo
-//                
-//            }
-//            if(this.operacion.equals(OPERACION_PROFESORES)){  //se vuleve de modificar un alumno
-//                this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-//                refrescarProfes(trabajoSelecc());
-//                
-//            }
-//            if(this.operacion.equals(OPERACION_ALUMNOS)){  //se vuleve de modificar un alumno
-//                this.ventana.getTablaTrabajos().setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado);
-//                refrescaralumnos(trabajoSelecc());
-//            }
-//        }
     }
-    
     private void refrescarTrabajos (){
         List<Trabajo> listaTrabajos = new ArrayList<>();
         listaTrabajos = gsT.buscarTrabajos(null);
@@ -430,7 +318,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
             if (!e.getValueIsAdjusting()) {
                 if (this.operacion.equals(OPERACION_NINGUNA)) { //se llama este metodo al crear la VentanaTrabajos o al seleccionar una fila el usuario
                     if (trabajoSelecc() != null) {
-                        System.out.println("alla refresca");
                         this.alumnoSeleccionado = 0;        //se selecciona la primera fila de alumnos
                         this.profesorSeleccionado = 0;      //se selecciona la primera fila de profesores
                         refrescarProfes(trabajoSelecc());   
@@ -438,21 +325,14 @@ public class ControladorTrabajos implements IControladorTrabajos{
                     }
                 }else               //se llama este metodo al ganar foco desde una ventana que no es el menu principal
                 {                   
-                        System.out.println("alla viene de otro lado");
-                        if (trabajoSelecc() != null) {
+                    if (trabajoSelecc() != null) {
                         refrescarProfes(trabajoSelecc());   
                         refrescaralumnos(trabajoSelecc());
-//                        this.bandera=0;
                         return;
-                        }
+                    }
                 }
-                }
-                
-            
-//        this.ventana.getTablaAlumnos().setRowSelectionInterval(this.alumnoSeleccionado, this.alumnoSeleccionado);     //selecciona un alumno
-//        this.ventana.getTablaProfesores().setRowSelectionInterval(this.profesorSeleccionado, this.profesorSeleccionado);    //se selecciona un profesor de la tabla
+            }
         });
-        System.out.println("hola");
         this.ventana.getTablaTrabajos().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      //para que solo se pueda seleccionar una fila a la vez
         this.ventana.getTablaTrabajos().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
     }
@@ -489,7 +369,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
         )
         {
             @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
-            
             public boolean isCellEditable(int row, int column) {
             return false;
         }
