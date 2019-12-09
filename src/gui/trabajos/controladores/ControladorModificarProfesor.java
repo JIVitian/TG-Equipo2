@@ -15,6 +15,7 @@ import gui.trabajos.modelos.GestorTrabajos;
 import gui.trabajos.modelos.RolEnTrabajo;
 import gui.trabajos.modelos.Trabajo;
 import gui.trabajos.vistas.VentanaModificarProfesor;
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -23,6 +24,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
 
@@ -67,12 +69,13 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
 
         int dniNuevoProf;
         if (this.ventana.verComboProfesores().getSelectedItem() != null) {
-            dniNuevoProf = Integer.parseInt((this.ventana.verComboProfesores().getSelectedItem().toString().split(","))[2]);
+            dniNuevoProf = Integer.parseInt((this.ventana.verComboProfesores().getSelectedItem().toString().split("-"))[1].trim());
             String resultado = gsT.reemplazarProfesor(this.unTrabajo, this.unRET.verProfesor(), fechaHasta, razon, gsP.dameProfesor(dniNuevoProf));
             
             if (!resultado.equals(IGestorTrabajos.EXITO)) {
             gsT.cancelar();
             JOptionPane.showMessageDialog(this.ventana, resultado, TRABAJO_MODIFICAR, JOptionPane.ERROR_MESSAGE);
+            colorCalendario();
             }
             else{
                 JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.INFORMATION_MESSAGE );
@@ -105,13 +108,20 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
                 case KeyEvent.VK_ENTER: 
                     this.guardar();
                     break;
+                case KeyEvent.VK_ESCAPE:
+                    this.btnCancelarClic(null);
+                    break;
                 case KeyEvent.VK_BACK_SPACE:    
+                    break;
                 case KeyEvent.VK_DELETE:
+                    break;
                 case KeyEvent.VK_SPACE:
                     break;
                 default:
                     evt.consume(); //consume el evento para que no sea procesado por la fuente
             }
+        }else{
+            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
 
@@ -127,8 +137,15 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
                 case KeyEvent.VK_ENTER: 
                     this.guardar();
                     break;
-                case KeyEvent.VK_BACK_SPACE:    
+                case KeyEvent.VK_BACK_SPACE: 
+                    colorCalendario();
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    this.btnCancelarClic(null);
+                    break;
                 case KeyEvent.VK_DELETE:
+                    colorCalendario();
+                    break;
                 case KeyEvent.VK_SPACE:
                     break;
                 default:
@@ -144,7 +161,7 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
         
         String profesores[] = new String[listaProfes.size()];           //Con este arreglo de cadenas armare los comboBox
         for (int i = 0; i < listaProfes.size(); i++) {
-            profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + " - " + listaProfes.get(i).verDNI();
+            profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + "-" + listaProfes.get(i).verDNI();
         }
         this.ventana.verComboProfesores().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));
     }
@@ -159,5 +176,14 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
         else{
             return null;
         }
-    }        
+    }
+    
+    private void colorCalendario(){
+        if (this.ventana.verFechaHasta().getCalendar() == null) {
+            this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+    }
+    
 }

@@ -10,11 +10,13 @@ import gui.interfaces.IGestorTrabajos;
 import gui.trabajos.modelos.GestorTrabajos;
 import gui.trabajos.modelos.Trabajo;
 import gui.trabajos.vistas.VentanaFinalizarTrabajo;
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
 
@@ -43,6 +45,7 @@ public class ControladorFinalizarTrabajo {
             if (!resultado.equals(IGestorTrabajos.EXITO)) {
                 gsT.cancelar();
                 JOptionPane.showMessageDialog(null, resultado, "", JOptionPane.ERROR_MESSAGE);
+                colorCalendario();
             }
             else{
                 JOptionPane.showMessageDialog(this.ventana, "El trabajo se finalizo exitosamente", "", JOptionPane.PLAIN_MESSAGE);
@@ -66,5 +69,13 @@ public class ControladorFinalizarTrabajo {
         }
         else
             return null;
+    }
+    
+    private void colorCalendario(){
+        if (this.ventana.getFechaFin().getCalendar() == null) {
+            this.ventana.getFechaFin().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getFechaFin().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
     }
 }

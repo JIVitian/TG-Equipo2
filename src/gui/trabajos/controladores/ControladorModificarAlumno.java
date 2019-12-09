@@ -44,7 +44,6 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         this.ventana.verTxtRazon().addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
-                colorTxtRazon();
             }
         });
         
@@ -71,8 +70,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
             if (!resultado.equals(IGestorTrabajos.EXITO)) {
                 gsT.cancelar();
                 JOptionPane.showMessageDialog(null, resultado, TRABAJO_MODIFICAR, JOptionPane.ERROR_MESSAGE);
-                colorCalendarios();
-                colorTxtRazon();
+                colorCalendario();
             }
             else{
                 JOptionPane.showMessageDialog(this.ventana, "El alumno se finalizo exitosamente", TRABAJO_MODIFICAR, JOptionPane.PLAIN_MESSAGE);
@@ -102,10 +100,8 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
                     this.btnCancelarClic(null);
                     break;
                 case KeyEvent.VK_BACK_SPACE:  
-                    this.colorTxtRazon();
                     break;
                 case KeyEvent.VK_DELETE:
-                    this.colorTxtRazon();
                     break;
                 case KeyEvent.VK_SPACE:
                     break;
@@ -126,8 +122,14 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
                 case KeyEvent.VK_ENTER: 
                     this.guardar();
                     break;
-                case KeyEvent.VK_BACK_SPACE:    
+                case KeyEvent.VK_BACK_SPACE:  
+                    colorCalendario();
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    this.btnCancelarClic(null);
                 case KeyEvent.VK_DELETE:
+                    colorCalendario();
+                    break;
                 case KeyEvent.VK_SPACE:
                     break;
                 default:
@@ -149,7 +151,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
     }
     
     
-    private void colorCalendarios(){
+    private void colorCalendario(){
         if (this.ventana.verFechaHasta().getCalendar() == null) {
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         }else{
@@ -158,11 +160,4 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
     }
     
     
-    private void colorTxtRazon(){
-        if (this.ventana.verTxtRazon().getText().trim().isEmpty()) {
-            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.RED, 2)); //si el campo de texto esta vacio,se resalta en rojo
-        }else{
-            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris
-        }
-    }
 }

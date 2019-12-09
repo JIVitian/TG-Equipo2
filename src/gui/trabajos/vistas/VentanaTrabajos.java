@@ -248,7 +248,7 @@ public class VentanaTrabajos extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnVolver.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnVolver.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

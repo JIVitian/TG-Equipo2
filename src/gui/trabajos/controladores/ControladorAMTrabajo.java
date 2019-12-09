@@ -192,13 +192,13 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         //Tutor
         int dniT;
         if (this.ventana.getjComboTutor().getSelectedItem() != null) {
-            dniT = Integer.parseInt(this.ventana.getjComboTutor().getSelectedItem().toString().split(",")[2]);
+            dniT = Integer.parseInt(this.ventana.getjComboTutor().getSelectedItem().toString().split("-")[1].trim());
             listaRET.add(gsRET.nuevoRolEnTrabajo(gsP.dameProfesor(dniT), Rol.TUTOR, fechaP));
         }
         //Cotutor
         int dniCo;
         if (this.ventana.getjComboCotutor().getSelectedItem() != null) {
-            dniCo = Integer.parseInt(this.ventana.getjComboCotutor().getSelectedItem().toString().split(",")[2]);
+            dniCo = Integer.parseInt(this.ventana.getjComboCotutor().getSelectedItem().toString().split("-")[1].trim());
             listaRET.add(gsRET.nuevoRolEnTrabajo(gsP.dameProfesor(dniCo), Rol.COTUTOR, fechaP));
         }
         

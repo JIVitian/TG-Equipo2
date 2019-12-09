@@ -249,14 +249,14 @@ public class ControladorTrabajos implements IControladorTrabajos{
         if(this.operacion.equals(OPERACION_PROFESORES)){  //se vuleve de tratar de finalizar un profesor
             if(this.gsT.verUltimoTrabajo() != -1){      //se finalizo un profesor
                 this.refrescarTrabajos();    //se refresca la tabla 
-                tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
+                tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado); //se selecciona el trabajo finalizado
             }
         }
         
         if(this.operacion.equals(OPERACION_ALUMNOS)){  //se vuleve de tratar modificar un alumno
             if(this.gsT.verUltimoTrabajo() != -1){      //se finalizo un alumno
                 this.refrescarTrabajos();    //se refresca la tabla 
-                tablaT.setRowSelectionInterval(gsT.verUltimoTrabajo(), gsT.verUltimoTrabajo()); //se selecciona el trabajo finalizado
+                tablaT.setRowSelectionInterval(this.trabajoSeleccionado, this.trabajoSeleccionado); //se selecciona el trabajo finalizado
             }
         }   
         this.operacion = OPERACION_NINGUNA;
@@ -273,9 +273,13 @@ public class ControladorTrabajos implements IControladorTrabajos{
             matrizt[i][0] = listaTrabajos.get(i).verTitulo() ;
             matrizt[i][1] = Integer.toString(listaTrabajos.get(i).verDuracion());
             
-            String areas = new String();
+            String areas = null;
             for(Area area : listaTrabajos.get(i).verAreas()){
-                areas += area.verNombre() + ",";
+                if (areas == null) {
+                    areas = area.verNombre();
+                }else{
+                    areas +=  "-" + area.verNombre();
+                }
             }
             matrizt[i][2] = areas ;
             
