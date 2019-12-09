@@ -39,7 +39,8 @@ public class ControladorAMSeminario implements IControladorAMSeminario {
 
     @Override
     public void btnGuardarClic(ActionEvent evt) {
-        GestorSeminarios gs = GestorSeminarios.instanciar();
+//        GestorSeminarios gs = GestorSeminarios.instanciar();
+        GestorSeminarios gs = GestorSeminarios.instanciar(this.elTrabajo);
         String estado;
         if(this.ventana.getObservaciones().trim().isEmpty()){
             try{

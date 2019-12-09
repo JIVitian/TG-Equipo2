@@ -8,14 +8,10 @@ package gui.trabajos.controladores;
 import com.toedter.calendar.JDateChooser;
 import gui.interfaces.IControladorModificarProfesor;
 import gui.interfaces.IGestorPersonas;
-import gui.interfaces.IGestorRolesEnTrabajos;
 import gui.interfaces.IGestorTrabajos;
 import gui.personas.modelos.GestorPersonas;
-import gui.personas.modelos.ModeloComboProfesores;
 import gui.personas.modelos.Profesor;
-import gui.trabajos.modelos.GestorRolesEnTrabajos;
 import gui.trabajos.modelos.GestorTrabajos;
-import gui.trabajos.modelos.Rol;
 import gui.trabajos.modelos.RolEnTrabajo;
 import gui.trabajos.modelos.Trabajo;
 import gui.trabajos.vistas.VentanaModificarProfesor;
@@ -29,10 +25,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author danie
- */
+
 public class ControladorModificarProfesor implements IControladorModificarProfesor {
     private VentanaModificarProfesor ventana;
     private Trabajo unTrabajo;
@@ -67,7 +60,7 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
     private void guardar(){
         IGestorTrabajos gsT = GestorTrabajos.instanciar();
         IGestorPersonas gsP = GestorPersonas.instanciar();
-        IGestorRolesEnTrabajos gRet = GestorRolesEnTrabajos.instanciar();
+//        IGestorRolesEnTrabajos gRet = GestorRolesEnTrabajos.instanciar();
         
         LocalDate fechaHasta = obtenerFechaDeJDateChooser(this.ventana.verFechaHasta());
         String razon = this.ventana.verTxtRazon().getText();
@@ -75,7 +68,6 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
         int dniNuevoProf;
         if (this.ventana.verComboProfesores().getSelectedItem() != null) {
             dniNuevoProf = Integer.parseInt((this.ventana.verComboProfesores().getSelectedItem().toString().split(","))[2]);
-//            RolEnTrabajo nuevoProfesor = gRet.nuevoRolEnTrabajo(gsP.dameProfesor(dniNuevoProf), unRET.verRol(), fechaHasta);
             String resultado = gsT.reemplazarProfesor(this.unTrabajo, this.unRET.verProfesor(), fechaHasta, razon, gsP.dameProfesor(dniNuevoProf));
             
             if (!resultado.equals(IGestorTrabajos.EXITO)) {
@@ -89,12 +81,6 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
         } else{
             JOptionPane.showMessageDialog(this.ventana, "Seleccione un profesor de reemplazo", "", JOptionPane.ERROR_MESSAGE);
         }
-        
-//        RolEnTrabajo nuevoProfesor = gRet.nuevoRolEnTrabajo(gsP.dameProfesor(dniNuevoProf), unRET.verRol(), fechaHasta);
-        
-        
-        
-        
     }
 
     /**
@@ -152,15 +138,13 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
     }
     
     
-    
-    
     private void llenarComboBox (){
-        List<Profesor> listaProfes = new ArrayList<Profesor>();
+        List<Profesor> listaProfes = new ArrayList<>();
         listaProfes = this.gsP.buscarProfesores(null);  //creo una lista con todos los profesores
         
         String profesores[] = new String[listaProfes.size()];           //Con este arreglo de cadenas armare los comboBox
         for (int i = 0; i < listaProfes.size(); i++) {
-            profesores[i] = listaProfes.get(i).verApellidos() + "," + listaProfes.get(i).verNombres()  + "," + listaProfes.get(i).verDNI();
+            profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + " - " + listaProfes.get(i).verDNI();
         }
         this.ventana.verComboProfesores().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));
     }

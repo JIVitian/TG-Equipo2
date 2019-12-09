@@ -12,15 +12,14 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
-/**
- *
- * @author danie
- */
+
 public class VentanaModificarProfesor extends JDialog {
     private IControladorModificarProfesor controlador;
     
     /**
-     * Creates new form VentanaModificarProfesor
+     * Constructor 
+     * @param controlador controlador de la ventana
+     * @param ventanaPadre ventana padre (VentanaTrabajos en este caso)
      */
     public VentanaModificarProfesor(IControladorModificarProfesor controlador, Dialog ventanaPadre) {
         super(ventanaPadre, true);
@@ -80,7 +79,7 @@ public class VentanaModificarProfesor extends JDialog {
         btnAceptar.setToolTipText("Modificar Profesor");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAceptarActionPerformed(evt);
+                btnAceptarClic(evt);
             }
         });
 
@@ -89,7 +88,7 @@ public class VentanaModificarProfesor extends JDialog {
         btnCancelar.setToolTipText("");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnCancelarClic(evt);
             }
         });
 
@@ -99,7 +98,7 @@ public class VentanaModificarProfesor extends JDialog {
             }
         });
 
-        etqRazon.setText("Razon:");
+        etqRazon.setText("Razón:");
 
         comboProfesores.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -113,22 +112,20 @@ public class VentanaModificarProfesor extends JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(etqFechaHasta)
-                        .addGap(85, 85, 85)
-                        .addComponent(fechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(etqRazon)
-                            .addComponent(etqNuevoProfesor))
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtRazon)
-                            .addComponent(comboProfesores, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAceptar)
                         .addGap(13, 13, 13)
-                        .addComponent(btnCancelar)))
+                        .addComponent(btnCancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(etqRazon)
+                            .addComponent(etqNuevoProfesor)
+                            .addComponent(etqFechaHasta))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtRazon)
+                            .addComponent(comboProfesores, 0, 315, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -156,13 +153,13 @@ public class VentanaModificarProfesor extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+    private void btnAceptarClic(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarClic
         controlador.btnAceptarClic(evt);
-    }//GEN-LAST:event_btnAceptarActionPerformed
+    }//GEN-LAST:event_btnAceptarClic
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    private void btnCancelarClic(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarClic
         controlador.btnCancelarClic(evt);
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    }//GEN-LAST:event_btnCancelarClic
 
     private void txtRazonPresionarTecla(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRazonPresionarTecla
         this.controlador.txtRazonPresionarTecla(evt);

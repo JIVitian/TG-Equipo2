@@ -7,20 +7,22 @@ package gui.trabajos.vistas;
 
 import com.toedter.calendar.JDateChooser;
 import gui.trabajos.controladores.ControladorFinalizarTrabajo;
+import java.awt.Dialog;
+import javax.swing.JDialog;
 
-/**
- *
- * @author FAMILIA
- */
-public class VentanaFinalizarTrabajo extends javax.swing.JDialog {
+
+public class VentanaFinalizarTrabajo extends JDialog {
     private ControladorFinalizarTrabajo controlador;
+    
     /**
-     * Creates new form VentanaFinalizarTrabajo
+     * Constructor 
+     * @param controlador controlador de la ventana
+     * @param ventanaPadre ventana padre (VentanaTrabajos en este caso)
      */
-    public VentanaFinalizarTrabajo(java.awt.Dialog parent, boolean modal, ControladorFinalizarTrabajo controlador) {
-        super(parent, modal);
-        initComponents();
+    public VentanaFinalizarTrabajo(ControladorFinalizarTrabajo controlador, Dialog ventanaPadre) {
+        super(ventanaPadre, true);
         this.controlador= controlador;
+        initComponents();
     }
 
     /**
@@ -33,33 +35,31 @@ public class VentanaFinalizarTrabajo extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jLabel2 = new javax.swing.JLabel();
-        jBotonFin = new javax.swing.JButton();
-        jBotonCancelar = new javax.swing.JButton();
+        jDateChooser = new com.toedter.calendar.JDateChooser();
+        btnFin = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("Fecha exposición:");
         jLabel1.setToolTipText("Ingrese la fecha de exposicion. \nDebe ser posterior a la fecha aprobacion.");
+        jLabel1.setMaximumSize(new java.awt.Dimension(32, 14));
+        jLabel1.setMinimumSize(new java.awt.Dimension(32, 14));
+        jLabel1.setPreferredSize(new java.awt.Dimension(32, 14));
 
-        jDateChooser1.setToolTipText("");
+        jDateChooser.setToolTipText("");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Finalizar Trabajo");
-
-        jBotonFin.setText("Finalizar");
-        jBotonFin.addActionListener(new java.awt.event.ActionListener() {
+        btnFin.setText("Finalizar");
+        btnFin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBotonFinActionPerformed(evt);
+                btnFinalizarClic(evt);
             }
         });
 
-        jBotonCancelar.setText("Cancelar");
-        jBotonCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBotonCancelarActionPerformed(evt);
+                btnCancelarClic(evt);
             }
         });
 
@@ -67,65 +67,53 @@ public class VentanaFinalizarTrabajo extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBotonCancelar)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnFin)
                         .addGap(18, 18, 18)
-                        .addComponent(jBotonFin))
+                        .addComponent(btnCancelar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
+                        .addComponent(jDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)))
                 .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBotonFin)
-                    .addComponent(jBotonCancelar))
+                    .addComponent(btnFin)
+                    .addComponent(btnCancelar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jBotonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonCancelarActionPerformed
-        this.controlador.botonCancelar(evt);
-    }//GEN-LAST:event_jBotonCancelarActionPerformed
+    private void btnCancelarClic(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarClic
+        this.controlador.btnCancelarClic(evt);
+    }//GEN-LAST:event_btnCancelarClic
 
-    private void jBotonFinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonFinActionPerformed
-        this.controlador.botonfin(evt);
-    }//GEN-LAST:event_jBotonFinActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
+    private void btnFinalizarClic(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarClic
+        this.controlador.btnFinalizarClic(evt);
+    }//GEN-LAST:event_btnFinalizarClic
 
     public JDateChooser getFechaFin() {
-        return jDateChooser1;
+        return jDateChooser;
     }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jBotonCancelar;
-    private javax.swing.JButton jBotonFin;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnFin;
+    private com.toedter.calendar.JDateChooser jDateChooser;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

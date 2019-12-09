@@ -8,21 +8,17 @@ package gui.trabajos.vistas;
 import com.toedter.calendar.JDateChooser;
 import gui.interfaces.IControladorModificarAlumno;
 import java.awt.Dialog;
-import java.awt.event.KeyEvent;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
-/**
- *
- * @author danie
- */
+
 public class VentanaModificarAlumno extends JDialog{
     private IControladorModificarAlumno controlador;
 
     /**
      * Constructor 
      * @param controlador controlador de la ventana
-     * @param ventanaPadre ventana padre (VentanaAreas en este caso)
+     * @param ventanaPadre ventana padre (VentanaTrabajos en este caso)
      */
     public VentanaModificarAlumno(IControladorModificarAlumno controlador, Dialog ventanaPadre) {
         super(ventanaPadre, true);

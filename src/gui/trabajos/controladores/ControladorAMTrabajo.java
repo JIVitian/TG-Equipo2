@@ -45,6 +45,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
     GestorAreas gsA;
     GestorRolesEnTrabajos gsRET;
     GestorAlumnosEnTrabajos gsAET;
+    
     /**
      * Constructor
      * @param ventanaPadre (VentanaAreas en este caso)
@@ -61,21 +62,16 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         this.agregarListeners();
         this.ventana.setLocationRelativeTo(null);
         this.ventana.setVisible(true);
-        
-        
-        
     }
     
     private void refrescar() {            //utilizo este metodo para llenar las tablas y los combo box
-        
-        List<Profesor> listaProfes = new ArrayList<Profesor>();
-        List<Alumno> listaAlumnos = new ArrayList<Alumno>();
-        List<Area> listaAreas = new ArrayList<Area>();
+        List<Profesor> listaProfes = new ArrayList<>();
+        List<Alumno> listaAlumnos = new ArrayList<>();
+        List<Area> listaAreas = new ArrayList<>();
         
         listaProfes = this.gsP.buscarProfesores(null);  //creo una lista con todos los profesores
         listaAlumnos=this.gsP.buscarAlumnos(null);      //creo una lista con todos los alumnos
         listaAreas=this.gsA.buscarAreas(null);          //creo una lista con todos las areas
-        
         
         String matrizA[][] = new String[(listaAreas.size())] [1];   //Lleno la tabla de areas
         for (int i = 0; i < listaAreas.size(); i++) {
@@ -96,7 +92,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
 
         String profesores[] = new String[listaProfes.size()];           //Con este arreglo de cadenas armare los comboBox
         for (int i = 0; i < listaProfes.size(); i++) {
-            profesores[i] = listaProfes.get(i).verApellidos() + "," + listaProfes.get(i).verNombres()  + "," + listaProfes.get(i).verDNI();
+            profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + " - " + listaProfes.get(i).verDNI();
         }
         this.ventana.getjComboTutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));         //Lleno los comboBox
         this.ventana.getjComboCotutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));
@@ -104,7 +100,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
 
         String matrizp[][] = new String[(listaProfes.size())] [2];             //Llena la tabla de Jurados
         for (int i = 0; i < listaProfes.size(); i++) {
-            matrizp[i][0] = listaProfes.get(i).verApellidos() + "," + listaProfes.get(i).verNombres() ;
+            matrizp[i][0] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres() ;
         }
         
         for (int i = 0; i < listaProfes.size(); i++) {
@@ -125,7 +121,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
 
         String[][] matrizal = new String[(listaAlumnos.size())] [2];             //Llena la tabla de Alumnos
         for (int i = 0; i < listaAlumnos.size(); i++) {
-            matrizal[i][0] = listaAlumnos.get(i).verApellidos() + "," + listaAlumnos.get(i).verNombres();
+            matrizal[i][0] = listaAlumnos.get(i).verApellidos() + ", " + listaAlumnos.get(i).verNombres();
         }
         for (int i = 0; i < listaAlumnos.size(); i++) {
             matrizal [i][1] = listaAlumnos.get(i).verCX();
@@ -138,7 +134,6 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             }
         ){
             @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
-            
             public boolean isCellEditable(int row, int column) {
             return false;
         }
@@ -147,10 +142,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         this.ventana.getjTablaAreas().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
         this.ventana.getjTablaJurado().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
         this.ventana.getjTablaAlumnos().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
-        
-        
     }
-    
     
     
     /**
@@ -159,7 +151,6 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
      */   
     @Override
     public void btnGuardarClic(ActionEvent evt) {
-        
         
         //Titulo del trabajo
         String titulo = this.ventana.getTxtTitulo().getText().trim();
@@ -179,9 +170,8 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         fechaP = obtenerFechaDeJDateChooser(this.ventana.getjFechaPresentacion());
         fechaA = obtenerFechaDeJDateChooser(this.ventana.getjFechaAprobacion());
         
-        
         //Areas del trabajo
-        List<Area> listaAreas = new ArrayList<Area>();
+        List<Area> listaAreas = new ArrayList<>();
         int[] seleccionadosA = this.ventana.getjTablaAreas().getSelectedRows();
         
         for (int i: seleccionadosA) {
@@ -191,7 +181,7 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         //Roles En Trabajo
         //Jurados
 //        List<Profesor> listaJurados = new ArrayList<Profesor>();
-        List<RolEnTrabajo> listaRET = new ArrayList <RolEnTrabajo>();
+        List<RolEnTrabajo> listaRET = new ArrayList<>();
 //        
         int[] seleccionadosJ = this.ventana.getjTablaJurado().getSelectedRows();
         for(int i : seleccionadosJ){
@@ -212,9 +202,8 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             listaRET.add(gsRET.nuevoRolEnTrabajo(gsP.dameProfesor(dniCo), Rol.COTUTOR, fechaP));
         }
         
-        
         //Alumnos en trabajo
-        List<AlumnoEnTrabajo> listaAET = new ArrayList<AlumnoEnTrabajo>();
+        List<AlumnoEnTrabajo> listaAET = new ArrayList<>();
         int[] seleccionadosAl = this.ventana.getjTablaAlumnos().getSelectedRows();
         for(int i : seleccionadosAl){
             String cxAl;
@@ -236,8 +225,6 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             this.ventana.dispose();
         }
     }
-    
-
 
     /**
      * Acción a ejecutar cuando se selecciona el botón Cancelar
@@ -292,9 +279,6 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
                 colorJurados();
             }
         });
-        
-        
-        
     }
 
     /**
@@ -422,6 +406,4 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
-    
-    
 }

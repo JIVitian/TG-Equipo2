@@ -32,8 +32,8 @@ public class GestorSeminarios implements IGestorSeminarios {
     
     private File ARCHIVO = new File("Seminarios.txt");
     
-    private GestorSeminarios(){
-//        this.elTrabajo = elTrabajo;
+    private GestorSeminarios(Trabajo elTrabajo){
+        this.elTrabajo = elTrabajo;
         this.leerArchivo();
     }
     
@@ -41,9 +41,9 @@ public class GestorSeminarios implements IGestorSeminarios {
 //        leerArchivo();
 //    }
     
-    public static GestorSeminarios instanciar(){
+    public static GestorSeminarios instanciar(Trabajo elTrabajo){
         if(gestor == null)
-            gestor = new GestorSeminarios();
+            gestor = new GestorSeminarios(elTrabajo);
         return gestor;
     }
     

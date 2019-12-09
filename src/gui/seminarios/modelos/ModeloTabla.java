@@ -24,7 +24,8 @@ public class ModeloTabla extends AbstractTableModel {
     
     public ModeloTabla(Trabajo elTrabajo){
         this.elTrabajo = elTrabajo;
-        gs = GestorSeminarios.instanciar();
+//        gs = GestorSeminarios.instanciar();
+        gs = GestorSeminarios.instanciar(this.elTrabajo);
     }
 
     @Override

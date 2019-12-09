@@ -43,7 +43,8 @@ public class ControladorModificarSeminario implements IControladorModificarSemin
 
     @Override
     public void btnModificarSeminarioClic(ActionEvent evt) {
-        GestorSeminarios gs = GestorSeminarios.instanciar();
+//        GestorSeminarios gs = GestorSeminarios.instanciar();
+        GestorSeminarios gs = GestorSeminarios.instanciar(this.elTrabajo);
         String estado;
         if(this.ventana.getObservaciones().trim().isEmpty()){
             try{

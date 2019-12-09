@@ -22,10 +22,7 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author danie
- */
+
 public class ControladorModificarAlumno implements IControladorModificarAlumno {
     private VentanaModificarAlumno ventana;
     private Trabajo unTrabajo;
@@ -55,10 +52,12 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         this.ventana.setVisible(true);
     }
     
+    
     @Override
     public void btnAceptarClic(ActionEvent evt) {
         this.guardar();
     }
+    
     
     private void guardar(){
         LocalDate fechaHasta = obtenerFechaDeJDateChooser(this.ventana.verFechaHasta());
@@ -82,6 +81,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
 
+    
     @Override
     public void btnCancelarClic(ActionEvent evt) {
         IGestorTrabajos gsT = GestorTrabajos.instanciar();
@@ -89,6 +89,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         this.ventana.dispose();
     }
 
+    
     @Override
     public void txtRazonPresionarTecla(KeyEvent evt) {
         char c = evt.getKeyChar();            
@@ -116,6 +117,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
 
+    
     @Override
     public void fechaHastaPresionarTecla(KeyEvent evt) {
         char c = evt.getKeyChar();            
@@ -134,6 +136,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
 //        }
     }
     
+    
     private LocalDate obtenerFechaDeJDateChooser(JDateChooser dateChooser) { //Convierte a LocalDate la fecha obtenida del JDateChooser
         Date date;
         if (dateChooser.getCalendar() != null) {
@@ -145,6 +148,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
     
+    
     private void colorCalendarios(){
         if (this.ventana.verFechaHasta().getCalendar() == null) {
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
@@ -152,6 +156,7 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
+    
     
     private void colorTxtRazon(){
         if (this.ventana.verTxtRazon().getText().trim().isEmpty()) {

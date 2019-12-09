@@ -40,26 +40,23 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="etqFechaHasta" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
-                      <Component id="fechaHasta" pref="315" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="etqRazon" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="etqNuevoProfesor" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtRazon" max="32767" attributes="0"/>
-                          <Component id="comboProfesores" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                       <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="etqRazon" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="etqNuevoProfesor" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="etqFechaHasta" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="fechaHasta" max="32767" attributes="0"/>
+                          <Component id="txtRazon" max="32767" attributes="0"/>
+                          <Component id="comboProfesores" pref="315" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -112,7 +109,7 @@
         <Property name="toolTipText" type="java.lang.String" value="Modificar Profesor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAceptarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAceptarClic"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCancelar">
@@ -122,7 +119,7 @@
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarClic"/>
       </Events>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="fechaHasta">
@@ -132,7 +129,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="etqRazon">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Razon:"/>
+        <Property name="text" type="java.lang.String" value="Raz&#xf3;n:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="comboProfesores">

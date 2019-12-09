@@ -30,10 +30,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 
-/**
- *
- * @author FAMILIA
- */
 public class ControladorTrabajos implements IControladorTrabajos{
     private VentanaTrabajos ventana;
     GestorTrabajos gsT ;
@@ -60,8 +56,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
         refrescarTrabajos ();
         this.ventana.setLocationRelativeTo(null);
         this.ventana.setVisible(true);
-        
-        
     }
     
     @Override
@@ -90,7 +84,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
                 this.operacion = OPERACION_MODIFICACION;
                 this.gsT.cancelar();
             }
-            
         }else{
             this.operacion = OPERACION_MODIFICACION;
             this.gsT.cancelar();
@@ -100,7 +93,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
 
     @Override
     public void btnBorrarClic(ActionEvent evt) {
-        
         if (ventana.getTablaTrabajos().getSelectedRow() != -1) {//La notificacion saltara solo si no se encuentra seleccionado un elemento de la tabla
             Trabajo trabajo = this.trabajoSelecc();
             this.trabajoSeleccionado = this.ventana.getTablaTrabajos().getSelectedRow();
@@ -108,36 +100,34 @@ public class ControladorTrabajos implements IControladorTrabajos{
             this.profesorSeleccionado = this.ventana.getTablaProfesores().getSelectedRow();
             this.operacion = OPERACION_BAJA;
             int confirmacion = JOptionPane.showConfirmDialog(ventana, "¿Eliminar Trabajo?");
-                if (confirmacion == 0) {//Si el usuario elige "Si" se procedera a eliminar el trabajo seleccionada
-                    String resultado = gsT.borrarTrabajo(trabajo);
-                    JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.INFORMATION_MESSAGE);
-                    if (resultado.equals(EXITO)) {
-                        this.trabajoSeleccionado = this.gsT.verUltimoTrabajo();
-                    }
-                } else{
-                    this.gsT.cancelar();
-                    
-                }   
-                    
-                
-            }else{
-                JOptionPane.showMessageDialog(ventana, "Debe seleccionar el Trabajo que desea borrar.");     
+            
+            if (confirmacion == 0) {//Si el usuario elige "Si" se procedera a eliminar el trabajo seleccionada
+                String resultado = gsT.borrarTrabajo(trabajo);
+                JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.INFORMATION_MESSAGE);
+                if (resultado.equals(EXITO)) {
+                    this.trabajoSeleccionado = this.gsT.verUltimoTrabajo();
+                }
+            } else{
+                this.gsT.cancelar();
             }
+        }else{
+            JOptionPane.showMessageDialog(ventana, "Debe seleccionar el Trabajo que desea borrar.");     
+        }
     }
 
     @Override
     public void btnSeminariosClic(ActionEvent evt) {
-            if (ventana.getTablaTrabajos().getSelectedRow() != -1) {//La notificacion saltara solo si no se encuentra seleccionado un elemento de la tabla
-                this.operacion = OPERACION_SEMINARIOS;
-                this.trabajoSeleccionado = this.ventana.getTablaTrabajos().getSelectedRow();
-                this.alumnoSeleccionado = this.ventana.getTablaAlumnos().getSelectedRow();
-                this.profesorSeleccionado = this.ventana.getTablaProfesores().getSelectedRow();
-                Trabajo trabajo = trabajoSelecc();
-                IControladorSeminarios controlador = new ControladorSeminarios (this.ventana, trabajo);
-            }
-            else {
-                JOptionPane.showMessageDialog(ventana, "Debe seleccionar un Trabajo.");
-            }
+        if (ventana.getTablaTrabajos().getSelectedRow() != -1) {//La notificacion saltara solo si no se encuentra seleccionado un elemento de la tabla
+            this.operacion = OPERACION_SEMINARIOS;
+            this.trabajoSeleccionado = this.ventana.getTablaTrabajos().getSelectedRow();
+            this.alumnoSeleccionado = this.ventana.getTablaAlumnos().getSelectedRow();
+            this.profesorSeleccionado = this.ventana.getTablaProfesores().getSelectedRow();
+            Trabajo trabajo = trabajoSelecc();
+            IControladorSeminarios controlador = new ControladorSeminarios (this.ventana, trabajo);
+        }
+        else {
+            JOptionPane.showMessageDialog(ventana, "Debe seleccionar un Trabajo.");
+        }
     }
 
     @Override
@@ -183,8 +173,7 @@ public class ControladorTrabajos implements IControladorTrabajos{
                 this.gsT.cancelar();
                 this.operacion = OPERACION_ALUMNOS;
             }
-        }
-        else {
+        } else {
             this.operacion = OPERACION_ALUMNOS;
             this.gsT.cancelar();
             JOptionPane.showMessageDialog(ventana, "Debe seleccionar un Alumno.");
@@ -272,6 +261,8 @@ public class ControladorTrabajos implements IControladorTrabajos{
         }   
         this.operacion = OPERACION_NINGUNA;
     }
+    
+    
     private void refrescarTrabajos (){
         List<Trabajo> listaTrabajos = new ArrayList<>();
         listaTrabajos = gsT.buscarTrabajos(null);
@@ -313,7 +304,6 @@ public class ControladorTrabajos implements IControladorTrabajos{
         
         this.ventana.getTablaTrabajos().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      //Solo se puede seleccionar un trabajo a la vez
         
-        
         this.ventana.getTablaTrabajos().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {    //la tabla tiene un listener para saber cuando se cambia la seleccion
             if (!e.getValueIsAdjusting()) {
                 if (this.operacion.equals(OPERACION_NINGUNA)) { //se llama este metodo al crear la VentanaTrabajos o al seleccionar una fila el usuario
@@ -336,6 +326,8 @@ public class ControladorTrabajos implements IControladorTrabajos{
         this.ventana.getTablaTrabajos().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      //para que solo se pueda seleccionar una fila a la vez
         this.ventana.getTablaTrabajos().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
     }
+    
+    
     private void refrescaralumnos (Trabajo trabajo){
         //Tabla Alumnos en trabajo
         
@@ -377,8 +369,9 @@ public class ControladorTrabajos implements IControladorTrabajos{
         this.ventana.getTablaAlumnos().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      //seteo para que solo se pueda seleccionar una fila a la vez
         this.ventana.getTablaAlumnos().getTableHeader().setReorderingAllowed(false);      //no se pueden reordenar las columnas
         this.ventana.getTablaAlumnos().setRowSelectionInterval(this.alumnoSeleccionado, this.alumnoSeleccionado);     //selecciona un alumno
-        
     }
+    
+    
     private void refrescarProfes (Trabajo trabajo){
         //Tabla RolesEn Trabajo
         
@@ -420,12 +413,13 @@ public class ControladorTrabajos implements IControladorTrabajos{
         this.ventana.getTablaProfesores().setRowSelectionInterval(this.profesorSeleccionado, this.profesorSeleccionado);    //se selecciona un profesor de la tabla
         
     }
+    
+    
     public Trabajo trabajoSelecc(){
         if (this.ventana.getTablaTrabajos().getSelectedRow()!= -1) {
              return gsT.dameTrabajo(this.ventana.getTablaTrabajos().getValueAt(this.ventana.getTablaTrabajos().getSelectedRow(), 0).toString());
         }
         return null;
     }
-    
 }
 

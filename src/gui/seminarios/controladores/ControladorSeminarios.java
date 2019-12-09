@@ -61,7 +61,8 @@ public class ControladorSeminarios implements IControladorSeminarios {
     @Override
     public void btnModificarSeminarioClic(ActionEvent evt) {
         int index = this.ventana.getTable().getSelectedRow();               //Obtengo la fila en la que estoy
-        GestorSeminarios gs = GestorSeminarios.instanciar();
+//        GestorSeminarios gs = GestorSeminarios.instanciar();
+        GestorSeminarios gs = GestorSeminarios.instanciar(this.elTrabajo);
         Seminario seminario = gs.getSeminario(index);                       //Obtengo el seminario de la fila indexada
         IControladorModificarSeminario controlador = new ControladorModificarSeminario(this.ventana, seminario, this.elTrabajo);
     }
@@ -73,7 +74,8 @@ public class ControladorSeminarios implements IControladorSeminarios {
 
     @Override
     public void ventanaGanaFoco(WindowEvent evt) {
-        GestorSeminarios gestor = GestorSeminarios.instanciar();
+//        GestorSeminarios gestor = GestorSeminarios.instanciar();
+        GestorSeminarios gestor = GestorSeminarios.instanciar(this.elTrabajo);
         this.configurarTabla();
         try{
             this.ventana.getTable().setRowSelectionInterval(gestor.getCantidad()-1, gestor.getCantidad()-1);
