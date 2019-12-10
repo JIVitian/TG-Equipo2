@@ -7,7 +7,11 @@ package gui.trabajos.modelos;
 
 import gui.seminarios.modelos.Seminario;
 import gui.areas.modelos.Area;
+import gui.interfaces.IGestorSeminarios;
+import gui.interfaces.IGestorTrabajos;
 import gui.personas.modelos.Profesor;
+import gui.seminarios.modelos.GestorSeminarios;
+import gui.seminarios.modelos.NotaAprobacion;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -307,29 +311,37 @@ public class Trabajo implements Comparable<Trabajo>{
      * @param observaciones observaciones del seminario
      * @return String  - cadena con el resultado de la operación (TRABAJO_FINALIZADO | ERROR_FECHA_EXPOSICION | DUPLICADOS | ERROR | ERROR_OBSERVACIONES | EXITO)
      */
-//    public String nuevoSeminario(LocalDate fechaExposicion, NotaAprobacion notaAprobacion, String observaciones) {
-//        GestorSeminarios gS = GestorSeminarios.instanciar();
-//
-//        for(Seminario s : this.seminarios){
-//            if(s.verFechaExposicion() == fechaExposicion){
-//                return SEMINARIO_DUPLICADO;
-//            }
-//        }
-//        if (!fechaExposicion.isBefore(fechaAprobacion)) { //FECHA DE EXPOSICION NO ES ANTES QUE LA DE APROBACION
-//            if (gS.validarSeminario(fechaExposicion, notaAprobacion, observaciones).toUpperCase().equalsIgnoreCase(EXITO)) {//VALIDAR DEBE RETORNAR EXITO
-//                Seminario semi = new Seminario(fechaExposicion, notaAprobacion, observaciones);
-//                if(!this.seminarios.contains(semi)){
-//                    this.seminarios.add(semi);
-//                    return SEMINARIO_EXITO;
-//                }
-//                return SEMINARIO_DUPLICADO;
-//            } else {
-//                return SEMINARIO_ERROR;
-//            }
-//        } else {
-//            return ERROR_FECHA_EXPOSICION;
-//        }
-//    }
+    public String nuevoSeminario(LocalDate fechaExposicion, NotaAprobacion notaAprobacion, String observaciones) {
+        IGestorSeminarios gS = GestorSeminarios.instanciar();
+        
+        if (this.estaFinalizado()) {
+            return IGestorSeminarios.TRABAJO_FINALIZADO;
+        }
+        for(Seminario s : this.seminarios){
+            if(s.verFechaExposicion() == fechaExposicion){
+                return IGestorSeminarios.DUPLICADOS;
+            }
+        }
+        if (fechaExposicion.isBefore(this.fechaAprobacion)) { 
+            return IGestorSeminarios.ERROR_FECHA_EXPOSICION;
+        } 
+        
+        String resultado = gS.validarSeminario(fechaExposicion, notaAprobacion, observaciones);
+        
+        if (resultado.equals(IGestorSeminarios.DATOS_CORRECTOS)) {//VALIDAR DEBE RETORNAR EXITO
+            Seminario semi = new Seminario(fechaExposicion, notaAprobacion, observaciones);
+            
+            if(this.tieneEsteSeminario(semi) == false){
+                this.seminarios.add(semi);
+                return IGestorSeminarios.EXITO;
+            } else {
+                return IGestorSeminarios.DUPLICADOS;
+            }
+        } else {
+            return IGestorSeminarios.ERROR;
+        }
+    }
+        
     
     /**
      * Modifica un seminario siempre y cuando no haya otro con la misma fecha
@@ -339,21 +351,22 @@ public class Trabajo implements Comparable<Trabajo>{
      * @param observaciones observaciones del seminario
      * @return String  - cadena con el resultado de la operación (ERROR | ERROR_OBSERVACIONES | EXITO)
      */    
-//    public String modificarSeminario(Seminario seminario, NotaAprobacion notaAprobacion, String observaciones) {
-//        GestorSeminarios gS = GestorSeminarios.instanciar();
-//        
-//        for(Seminario s : this.seminarios){
-//            if(s.equals(seminario)){
-//                if(gS.validarSeminario(notaAprobacion, observaciones).equalsIgnoreCase(EXITO)){
-//                    s.asignarNotaAprobacion(notaAprobacion);
-//                    s.asignarObservaciones(observaciones);
-//                    return gS.validarSeminario(notaAprobacion, observaciones);
-//                }
-//                return gS.validarSeminario(notaAprobacion, observaciones);
-//            }
-//        }
-//        return SEMINARIO_INEXISTENTE;
-//    }
+    public String modificarSeminario(Seminario seminario, NotaAprobacion notaAprobacion, String observaciones) {
+        IGestorSeminarios gS = GestorSeminarios.instanciar();
+        String resultado = gS.validarSeminario(notaAprobacion, observaciones);
+        
+        if (resultado.equals(IGestorSeminarios.DATOS_CORRECTOS)) {
+            if (this.tieneEsteSeminario(seminario)) {
+                seminario.asignarNotaAprobacion(notaAprobacion);
+                seminario.asignarObservaciones(observaciones);
+                
+                return IGestorSeminarios.EXITO;
+            } else {
+                return IGestorTrabajos.SEMINARIO_INEXISTENTE;
+            }
+        }
+        return resultado;
+    }
 
     
     /**
@@ -371,7 +384,7 @@ public class Trabajo implements Comparable<Trabajo>{
      * @return List<Seminario>  - lista de seminarios ordenada según la fecha de exposición
      */
     public List<Seminario> verSeminarios() {
-//        Collections.sort(this.seminarios);
+        Collections.sort(this.seminarios);
         return this.seminarios;
     }
         
@@ -381,9 +394,9 @@ public class Trabajo implements Comparable<Trabajo>{
      */
     public boolean estaFinalizado() {
         if(fechaFinalizacion != null){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**

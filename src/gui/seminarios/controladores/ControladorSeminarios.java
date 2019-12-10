@@ -6,15 +6,12 @@
 package gui.seminarios.controladores;
 
 import gui.interfaces.IControladorAMSeminario;
-import gui.interfaces.IControladorModificarSeminario;
 import gui.interfaces.IControladorSeminarios;
-import gui.seminarios.modelos.GestorSeminarios;
 import gui.seminarios.modelos.ModeloTabla;
 import gui.seminarios.modelos.Seminario;
 import gui.seminarios.vistas.VentanaSeminarios;
 import gui.trabajos.modelos.Trabajo;
 import gui.trabajos.vistas.VentanaTrabajos;
-//import gui.trabajos.vistas.VentanaTrabajos;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.JTable;
@@ -34,6 +31,7 @@ public class ControladorSeminarios implements IControladorSeminarios {
         this.configurarTabla();
         this.ventana.setModificarEnabled(false);
         this.ventana.setTitle("Seminarios");
+        this.ventana.setTxtTituloTrabajo("Seminarios del trabajo \"" + this.elTrabajo.verTitulo() + "\"");
         this.ventana.setVisible(true);
         this.ventana.setLocationRelativeTo(null);
     }
@@ -43,14 +41,14 @@ public class ControladorSeminarios implements IControladorSeminarios {
      */
     private void configurarTabla(){
        JTable tablaSeminarios = this.ventana.getTable();
-       tablaSeminarios.setModel(new ModeloTabla(this.elTrabajo));                //Seteo el modelo creado en una clase
-       tablaSeminarios.setCellSelectionEnabled(true);                            //Para poder seleccionar una celda
-       tablaSeminarios.getTableHeader().setReorderingAllowed(false);             //Para poder reordenar columnas
-       tablaSeminarios.getTableHeader().setResizingAllowed(false);               //Para poder cambiar tamaño
+       tablaSeminarios.setModel(new ModeloTabla(this.elTrabajo));               //Seteo el modelo creado en una clase
+       tablaSeminarios.setCellSelectionEnabled(true);                           //Para poder seleccionar una celda
+       tablaSeminarios.getTableHeader().setReorderingAllowed(false);            //Para poder reordenar columnas
+       tablaSeminarios.getTableHeader().setResizingAllowed(false);              //Para poder cambiar tamaño
        tablaSeminarios.getColumnModel().getColumn(0).setPreferredWidth(9);      //Para setear el ancho predeterminado de la columna
        tablaSeminarios.getColumnModel().getColumn(1).setPreferredWidth(20);
        tablaSeminarios.getColumnModel().getColumn(2).setPreferredWidth(30);
-       tablaSeminarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);    //Modo de selección (con selección simple, se pueden seleccionar muchas columnas a la vez)
+       tablaSeminarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   //Modo de selección (con selección simple, se pueden seleccionar muchas columnas a la vez)
     }
     
     @Override
@@ -60,11 +58,9 @@ public class ControladorSeminarios implements IControladorSeminarios {
 
     @Override
     public void btnModificarSeminarioClic(ActionEvent evt) {
-        int index = this.ventana.getTable().getSelectedRow();               //Obtengo la fila en la que estoy
-//        GestorSeminarios gs = GestorSeminarios.instanciar();
-        GestorSeminarios gs = GestorSeminarios.instanciar(this.elTrabajo);
-        Seminario seminario = gs.getSeminario(index);                       //Obtengo el seminario de la fila indexada
-        IControladorModificarSeminario controlador = new ControladorModificarSeminario(this.ventana, seminario, this.elTrabajo);
+        int index = this.ventana.getTable().getSelectedRow();                                   //Obtengo la fila en la que estoy
+        Seminario seminario = this.elTrabajo.verSeminarios().get(index);                        //Obtengo el seminario de la fila indexada
+        IControladorAMSeminario controlador = new ControladorAMSeminario(this.ventana, seminario, this.elTrabajo);
     }
 
     @Override
@@ -74,11 +70,9 @@ public class ControladorSeminarios implements IControladorSeminarios {
 
     @Override
     public void ventanaGanaFoco(WindowEvent evt) {
-//        GestorSeminarios gestor = GestorSeminarios.instanciar();
-        GestorSeminarios gestor = GestorSeminarios.instanciar(this.elTrabajo);
         this.configurarTabla();
         try{
-            this.ventana.getTable().setRowSelectionInterval(gestor.getCantidad()-1, gestor.getCantidad()-1);
+            this.ventana.getTable().setRowSelectionInterval(this.elTrabajo.verSeminarios().size()-1, this.elTrabajo.verSeminarios().size()-1);
         }
         catch(IllegalArgumentException e){
             

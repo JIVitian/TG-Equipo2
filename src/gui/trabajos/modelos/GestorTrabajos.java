@@ -213,7 +213,7 @@ public class GestorTrabajos implements IGestorTrabajos {
 //SE REPITE HASTA QUE LA POSICION DE J SEA LA ULTIMA DE LA LISTA
                     if (aet.get(i).equals(aet.get(j))) {
                         contador ++;
-                        if (contador > 1) {
+                        if (contador < 1) {
                             return ERROR_ALUMNOS;
                         }
                     }
@@ -445,7 +445,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                     }else{
                         ret.asignarRazon(razon);
                     }
-
                     //CREA UN NUEVO RET SIN FechaHasta NI Razon
                     trabajo.agregarRolEnTrabajo(gRet.nuevoRolEnTrabajo(nuevoProfesor, ret.verRol(), fechaHasta));
 
@@ -491,7 +490,7 @@ public class GestorTrabajos implements IGestorTrabajos {
             for(AlumnoEnTrabajo aet : trabajo.verAlumnosActuales()){
                 if (fechaHasta.isBefore(aet.verFechaDesde())) {
                     this.cancelar();
-                    return TRABAJO_FINALIZAR_ALUMNO_ERROR;
+                    return ERROR_FECHA_EXPOSICION;
                 }
                 if (aet.verAlumno().equals(alumno)) {
                     aet.asignarFechaHasta(fechaHasta);
@@ -507,10 +506,14 @@ public class GestorTrabajos implements IGestorTrabajos {
                         return EXITO;
                     }
                     return resultado;
-                } else {
-                    return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE;
                 }
+//                } else {
+//                    this.cancelar();
+//                    return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE;
+//                }
             }
+            this.cancelar();
+            return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE;
         }
         this.cancelar();
         return TRABAJO_INEXISTENTE;

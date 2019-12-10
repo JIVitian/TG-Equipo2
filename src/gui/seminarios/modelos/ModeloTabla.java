@@ -5,7 +5,9 @@
  */
 package gui.seminarios.modelos;
 
+import gui.trabajos.modelos.GestorTrabajos;
 import gui.trabajos.modelos.Trabajo;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -18,14 +20,10 @@ public class ModeloTabla extends AbstractTableModel {
     private final String notas = "Nota";
     private final String observaciones = "Observaciones";
     private Trabajo elTrabajo;
-    private String filtro;
-    private GestorSeminarios gs;
-    private List<Seminario> buscados = null;
     
     public ModeloTabla(Trabajo elTrabajo){
-        this.elTrabajo = elTrabajo;
-//        gs = GestorSeminarios.instanciar();
-        gs = GestorSeminarios.instanciar(this.elTrabajo);
+        GestorTrabajos gt = GestorTrabajos.instanciar();
+        this.elTrabajo = gt.dameTrabajo(elTrabajo.verTitulo());
     }
 
     @Override
@@ -33,7 +31,7 @@ public class ModeloTabla extends AbstractTableModel {
         switch(columnIndex){
             case 0:
                 try{
-                    return gs.verFechaExpSeminario(elTrabajo.verSeminarios().get(rowIndex));
+                    return verFechaExpSeminario(elTrabajo.verSeminarios().get(rowIndex));
                 }
                 catch(IndexOutOfBoundsException e){
                     System.out.println("Indexado inexistente.");
@@ -86,5 +84,16 @@ public class ModeloTabla extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int row, int column){
         return false;
+    }
+      
+    /**
+     * Muestra la fecha de exposición (en formato String) del seminario que se ingresa.
+     * @param seminario
+     * @return 
+     */
+    private String verFechaExpSeminario(Seminario seminario){
+        String formato = "dd/MM/yyyy";
+        String fFormateada = seminario.verFechaExposicion().format(DateTimeFormatter.ofPattern(formato));
+        return fFormateada;
     }
 }

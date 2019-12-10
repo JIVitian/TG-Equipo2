@@ -8,6 +8,7 @@ package gui.seminarios.vistas;
 import gui.seminarios.controladores.ControladorSeminarios;
 import javax.swing.JDialog;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -36,6 +37,11 @@ public class VentanaSeminarios extends javax.swing.JDialog {
     public void setModificarEnabled(boolean evento){
         this.btnModificar.setEnabled(evento);
     }
+    
+    public void setTxtTituloTrabajo(String t){
+        this.tituloTrabajo.setText(t);
+        this.tituloTrabajo.setHorizontalAlignment(SwingConstants.CENTER);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,6 +57,7 @@ public class VentanaSeminarios extends javax.swing.JDialog {
         btnNuevo = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
+        tituloTrabajo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -116,18 +123,24 @@ public class VentanaSeminarios extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addGap(86, 86, 86)
                 .addComponent(btnModificar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                 .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tituloTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(tituloTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificar)
                     .addComponent(btnVolver)
@@ -169,5 +182,6 @@ public class VentanaSeminarios extends javax.swing.JDialog {
     private javax.swing.JButton btnVolver;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
+    private javax.swing.JLabel tituloTrabajo;
     // End of variables declaration//GEN-END:variables
 }
