@@ -10,6 +10,10 @@ import gui.areas.modelos.Area;
 import gui.areas.modelos.GestorAreas;
 import gui.interfaces.IControladorAMTrabajo;
 import gui.interfaces.IControladorTrabajos;
+import gui.interfaces.IGestorAlumnosEnTrabajos;
+import gui.interfaces.IGestorAreas;
+import gui.interfaces.IGestorPersonas;
+import gui.interfaces.IGestorRolesEnTrabajos;
 import gui.interfaces.IGestorTrabajos;
 import static gui.interfaces.IGestorTrabajos.EXITO;
 import gui.personas.modelos.Alumno;
@@ -31,8 +35,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -40,17 +46,20 @@ import javax.swing.event.ListSelectionEvent;
 
 public class ControladorAMTrabajo implements IControladorAMTrabajo{
     private VentanaAMTrabajo ventana;
-    GestorTrabajos gsT ;
-    GestorPersonas gsP;
-    GestorAreas gsA;
-    GestorRolesEnTrabajos gsRET;
-    GestorAlumnosEnTrabajos gsAET;
+    IGestorTrabajos gsT ;
+    IGestorPersonas gsP;
+    IGestorAreas gsA;
+    IGestorRolesEnTrabajos gsRET;
+    IGestorAlumnosEnTrabajos gsAET;
+    private Trabajo unTrabajo;
     
     /**
      * Constructor
      * @param ventanaPadre (VentanaAreas en este caso)
+     * @param unTrabajo
      */    
     public ControladorAMTrabajo(Dialog ventanaPadre, Trabajo unTrabajo) {
+        this.unTrabajo = unTrabajo;
         gsT = GestorTrabajos.instanciar();
         gsP = GestorPersonas.instanciar();
         gsA = GestorAreas.instanciar();
@@ -58,22 +67,96 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         gsAET = GestorAlumnosEnTrabajos.instanciar();
         this.ventana = new VentanaAMTrabajo(this, ventanaPadre);
         refrescar();
-        this.ventana.setTitle(IControladorTrabajos.TRABAJO_NUEVO);
+        
+        this.setearVentana();
         this.agregarListeners();
         this.ventana.setLocationRelativeTo(null);
         this.ventana.setVisible(true);
     }
     
+    private class ModeloComboTutorCotutor extends DefaultComboBoxModel{
+        public ModeloComboTutorCotutor() {
+            for (Profesor p : gsP.buscarProfesores(null)) {
+                this.addElement(p);
+            }
+        }
+        public Profesor obtenerTutorCotutor(){
+            return (Profesor)this.getSelectedItem();
+        }
+        public void seleccionarTutorCotutor(Profesor p){
+            this.setSelectedItem(p);
+        }
+    };
+    
+    private void setearVentana(){
+//        this.ventana.getjComboTutor().setModel(new ModeloComboTutorCotutor());
+//        this.ventana.getjComboCotutor().setModel(new ModeloComboTutorCotutor());
+        
+        if (this.unTrabajo == null) {
+            this.ventana.setTitle(IControladorTrabajos.TRABAJO_NUEVO);
+            this.ventana.getjFechaFinalizacion().setEnabled(false);
+            
+            ((ModeloComboTutorCotutor)this.ventana.getjComboTutor().getModel()).seleccionarTutorCotutor(null);
+            ((ModeloComboTutorCotutor)this.ventana.getjComboCotutor().getModel()).seleccionarTutorCotutor(null);
+//            this.ventana.getjComboTutor().setSelectedItem(null);
+//            this.ventana.getjComboCotutor().setSelectedItem(null);
+            
+            
+        } else {
+            this.ventana.setTitle(IControladorTrabajos.TRABAJO_MODIFICAR);
+            
+            //Titulo
+            this.ventana.verTxtTitulo().setText(this.unTrabajo.verTitulo());
+            this.ventana.verTxtTitulo().setEnabled(false);
+            
+            //Duracion
+            this.ventana.verTxtDuracion().setText(Integer.toString(this.unTrabajo.verDuracion()));
+            this.ventana.verTxtDuracion().setEnabled(false);
+            
+            //Fechas
+            GregorianCalendar fechaP = GregorianCalendar.from(this.unTrabajo.verFechaPresentacion().atStartOfDay(ZoneId.systemDefault()));
+            this.ventana.getjFechaPresentacion().setCalendar(fechaP);
+            this.ventana.getjFechaPresentacion().setEnabled(false);
+            
+            GregorianCalendar fechaAp = GregorianCalendar.from(this.unTrabajo.verFechaAprobacion().atStartOfDay(ZoneId.systemDefault()));
+            this.ventana.getjFechaAprobacion().setCalendar(fechaAp);
+            this.ventana.getjFechaAprobacion().setEnabled(false);
+            
+            //Areas
+            List<Area> listaAreas = this.unTrabajo.verAreas();
+//            int[] seleccionadosA = new int[listaAreas.size()];
+//            int i = 0;
+//
+//            for (Area area : listaAreas) {
+//                seleccionadosA[i++] = gsA.ordenArea(area);
+//            }
+//            this.ventana.getjTablaAreas().getSelectedRows().setSelectionMode(seleccionadosA);
+            this.ventana.getjTablaAreas().setEnabled(false);
+            
+            //Alumno
+            this.ventana.getjTablaAlumnos().setEnabled(false);
+            
+            //Tutor
+            ((ModeloComboTutorCotutor)this.ventana.getjComboTutor().getModel()).seleccionarTutorCotutor(this.unTrabajo.verTutorOCotutor(Rol.TUTOR));
+            this.ventana.getjComboTutor().setEnabled(false);
+            
+            //Cotutor
+            ((ModeloComboTutorCotutor)this.ventana.getjComboCotutor().getModel()).seleccionarTutorCotutor(this.unTrabajo.verTutorOCotutor(Rol.COTUTOR));
+//            this.ventana.getjComboCotutor().setSelectedItem(this.unTrabajo.verTutorOCotutor(Rol.COTUTOR));
+            this.ventana.getjComboCotutor().setEnabled(false);
+            
+            //Jurado
+            this.ventana.getjTablaJurado().setEnabled(false);
+        }
+    }
+    
     private void refrescar() {            //utilizo este metodo para llenar las tablas y los combo box
-        List<Profesor> listaProfes = new ArrayList<>();
-        List<Alumno> listaAlumnos = new ArrayList<>();
-        List<Area> listaAreas = new ArrayList<>();
+        List<Profesor> listaProfes = this.gsP.buscarProfesores(null);  //creo una lista con todos los profesores
+        List<Alumno> listaAlumnos = this.gsP.buscarAlumnos(null);      //creo una lista con todos los alumnos
+        List<Area> listaAreas = this.gsA.buscarAreas(null);          //creo una lista con todos las areas
         
-        listaProfes = this.gsP.buscarProfesores(null);  //creo una lista con todos los profesores
-        listaAlumnos=this.gsP.buscarAlumnos(null);      //creo una lista con todos los alumnos
-        listaAreas=this.gsA.buscarAreas(null);          //creo una lista con todos las areas
-        
-        String matrizA[][] = new String[(listaAreas.size())] [1];   //Lleno la tabla de areas
+        //Lleno la tabla de areas
+        String matrizA[][] = new String[(listaAreas.size())] [1];
         for (int i = 0; i < listaAreas.size(); i++) {
             matrizA[i][0] = listaAreas.get(i).verNombre();
         }
@@ -84,21 +167,25 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             }
         ){
             @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
-            
             public boolean isCellEditable(int row, int column) {
-            return false;
-        }
+                return false;
+            }
         });
 
-        String profesores[] = new String[listaProfes.size()];           //Con este arreglo de cadenas armare los comboBox
+        //Con este arreglo de cadenas armare los comboBox
+        String profesores[] = new String[listaProfes.size()];
         for (int i = 0; i < listaProfes.size(); i++) {
             profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + " - " + listaProfes.get(i).verDNI();
         }
-        this.ventana.getjComboTutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));         //Lleno los comboBox
-        this.ventana.getjComboCotutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));
+        
+        //Lleno los comboBox
+//        this.ventana.getjComboTutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));         
+//        this.ventana.getjComboCotutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));
+        this.ventana.getjComboTutor().setModel(new ModeloComboTutorCotutor());
+        this.ventana.getjComboCotutor().setModel(new ModeloComboTutorCotutor());
 
-
-        String matrizp[][] = new String[(listaProfes.size())] [2];             //Llena la tabla de Jurados
+        //Llena la tabla de Jurados
+        String matrizp[][] = new String[(listaProfes.size())] [2];
         for (int i = 0; i < listaProfes.size(); i++) {
             matrizp[i][0] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres() ;
         }
@@ -113,13 +200,13 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             }
         ){
             @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
-            
             public boolean isCellEditable(int row, int column) {
-            return false;
-        }
+                return false;
+            }
         });
 
-        String[][] matrizal = new String[(listaAlumnos.size())] [2];             //Llena la tabla de Alumnos
+        //Llena la tabla de Alumnos
+        String[][] matrizal = new String[(listaAlumnos.size())] [2];             
         for (int i = 0; i < listaAlumnos.size(); i++) {
             matrizal[i][0] = listaAlumnos.get(i).verApellidos() + ", " + listaAlumnos.get(i).verNombres();
         }
@@ -135,8 +222,8 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         ){
             @Override       //por defecto, el modelo Default de tabla si permite editar el contenido de las celdas
             public boolean isCellEditable(int row, int column) {
-            return false;
-        }
+                return false;
+            }
         });
         
         this.ventana.getjTablaAreas().getTableHeader().setReorderingAllowed(false);       // no se pueden reordenar las columnas
@@ -151,7 +238,28 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
      */   
     @Override
     public void btnGuardarClic(ActionEvent evt) {
+        if (this.unTrabajo == null) {
+            this.nuevoTrabajo();
+        } else {
+        this.modificarTrabajo();
+        }
+    }
+    
+    public void modificarTrabajo(){
+        LocalDate fechaF = this.obtenerFechaDeJDateChooser(this.ventana.getjFechaFinalizacion());
         
+        String resultado = gsT.finalizarTrabajo(this.unTrabajo, fechaF);
+        if (!resultado.equals(EXITO)) {
+            gsT.cancelar();
+            JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.WARNING_MESSAGE);
+            this.colorCalendarios();
+        } else {
+            JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.INFORMATION_MESSAGE);
+            this.ventana.dispose();
+        }
+    }
+    
+    public void nuevoTrabajo(){
         //Titulo del trabajo
         String titulo = this.ventana.getTxtTitulo().getText().trim();
         
@@ -164,11 +272,8 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
         
         //Fechas del Trabajo
-        LocalDate fechaP;
-        LocalDate fechaA;
-        
-        fechaP = obtenerFechaDeJDateChooser(this.ventana.getjFechaPresentacion());
-        fechaA = obtenerFechaDeJDateChooser(this.ventana.getjFechaAprobacion());
+        LocalDate fechaP = obtenerFechaDeJDateChooser(this.ventana.getjFechaPresentacion());
+        LocalDate fechaA = obtenerFechaDeJDateChooser(this.ventana.getjFechaAprobacion());
         
         //Areas del trabajo
         List<Area> listaAreas = new ArrayList<>();

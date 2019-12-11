@@ -133,21 +133,17 @@ public class Trabajo implements Comparable<Trabajo>{
      * @return Profesor  - profesor con el rol especificado
      */
     public Profesor verTutorOCotutor(Rol rol) {
-        List<Profesor> cotutores = new ArrayList<>();
-        
+        if (rol == Rol.JURADO) {
+            return null;
+        }
         for(RolEnTrabajo ret0 : this.ret){
-            if(ret0.verRol() == rol){ //Solo se permite un Tutor y un tuto
+            if(ret0.verRol() == rol){ //Solo se permite un Tutor y un cotutor
                 if(ret0.verFechaHasta() == null){
                     return ret0.verProfesor();
                 }
             }
-            if (ret0.verRol() == Rol.COTUTOR) {
-                cotutores.add(ret0.verProfesor());
-            }
         }
-        if (cotutores.isEmpty()) {
-            return null;
-        }
+        
         return null;
     }
 
