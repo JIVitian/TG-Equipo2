@@ -352,19 +352,22 @@ public class GestorTrabajos implements IGestorTrabajos {
             trabajo.asignarFechaFinalizacion(fechaFinalizacion);
 
             trabajo.verProfesoresConRoles().forEach((ret) -> {
-                ret.asignarFechaHasta(fechaFinalizacion);
-//                if (ret.verRazon().equals(VALORES_NULOS)) {
-//                    ret.asignarRazon(TRABAJO_FINALIZACION);
-//                }
-                ret.asignarRazon(TRABAJO_FINALIZACION);
+                if (ret.verFechaHasta() == null) {
+                    ret.asignarFechaHasta(fechaFinalizacion);
+                    ret.asignarRazon(TRABAJO_FINALIZACION);
+                }
             });
 
             trabajo.verAlumnos().forEach((aet) -> {
-                aet.asignarFechaHasta(fechaFinalizacion);
-//                if (aet.verRazon().equals(VALORES_NULOS)) {
+                if (aet.verFechaHasta() == null) {
+                    aet.asignarFechaHasta(fechaFinalizacion);
+                    aet.asignarRazon(TRABAJO_FINALIZACION);
+                }
+//                    aet.asignarFechaHasta(fechaFinalizacion);
+////                if (aet.verRazon().equals(VALORES_NULOS)) {
+////                    aet.asignarRazon(TRABAJO_FINALIZACION);
+////                }
 //                    aet.asignarRazon(TRABAJO_FINALIZACION);
-//                }
-                aet.asignarRazon(TRABAJO_FINALIZACION);
             });
 
             String resultado = this.escribirArchivo();
