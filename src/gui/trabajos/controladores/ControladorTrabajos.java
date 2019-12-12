@@ -78,7 +78,8 @@ public class ControladorTrabajos implements IControladorTrabajos{
             Trabajo trabajo = this.trabajoSelecc();
             if (this.trabajoSelecc().verFechaFinalizacion() == null) {
                 this.operacion = OPERACION_MODIFICACION;
-                ControladorFinalizarTrabajo controlador = new ControladorFinalizarTrabajo(this.ventana, trabajo);
+//                ControladorFinalizarTrabajo controlador = new ControladorFinalizarTrabajo(this.ventana, trabajo);
+                IControladorAMTrabajo controlador = new ControladorAMTrabajo(this.ventana, trabajo);
             }else {
                 JOptionPane.showMessageDialog(null, "El trabajo ya ha sido finalizado previamente", "", JOptionPane.ERROR_MESSAGE);
                 this.operacion = OPERACION_MODIFICACION;
