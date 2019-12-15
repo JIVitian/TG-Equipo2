@@ -20,6 +20,7 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -60,14 +61,19 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
         this.ventana.setTitle(TRABAJO_MODIFICAR);
 
         //Convierto fechaDesde de LocalDate a Date
-        Date date = Date.from(this.unRET.verFechaDesde().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date fechaDesde = Date.from(this.unRET.verFechaDesde().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         //Muestro y desabilito el dateChooser de fechaDesde
-        this.ventana.verFechaDesde().setDate(date);
+        this.ventana.verFechaDesde().setDate(fechaDesde);
         this.ventana.verFechaDesde().setEnabled(false);
         
-        //Muestro la fechaDesde como referencia en el dateChooser de fechaHasta
-        this.ventana.verFechaHasta().setDate(date);
+        if(fechaDesde.compareTo(Date.from(Instant.now())) < 0){
+            //Muestro la fecha actual como referencia en el dateChooser de fechaHasta
+            this.ventana.verFechaHasta().setDate(Date.from(Instant.now()));
+        }else{
+            //Muestro la fechaDesde como referencia en el dateChooser de fechaHasta
+            this.ventana.verFechaHasta().setDate(fechaDesde);
+        }
     }
     
     /**
@@ -80,14 +86,14 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
         //Agrego listeners a los elementos de la ventana para marcar en rojo cuando esten mal//
         //-----------------------------------------------------------------------------------//
        
-        //Listener de txtRazon
-        this.ventana.verTxtRazon().addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                colorTxtRazon();
-            }
-        });
-        
+//        //Listener de txtRazon
+//        this.ventana.verTxtRazon().addFocusListener(new java.awt.event.FocusAdapter() {
+//            @Override
+//            public void focusGained(java.awt.event.FocusEvent evt) {
+//                colorTxtRazon();
+//            }
+//        });
+//        
         //Listener fechaHasta
         this.ventana.verFechaHasta().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
             if ("date".equals(e.getPropertyName())) {
@@ -238,7 +244,7 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
      * Le da color al borde de los campos dateChooser de VentanaModificarProfesor
      */
     private void colorCalendarios(){
-        if (this.ventana.verFechaHasta().getCalendar() == null) {
+        if (this.ventana.verFechaHasta().getCalendar() == null || obtenerFechaDeJDateChooser(this.ventana.verFechaHasta()).isBefore(unRET.verFechaDesde())) {
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -248,11 +254,11 @@ public class ControladorModificarProfesor implements IControladorModificarProfes
     /**
      * Le da color al borde del campo txtRazon de VentanaModificarProfesor
      */
-    private void colorTxtRazon(){
-        if (this.ventana.verTxtRazon().getText().trim().isEmpty()) {
-            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.RED, 1)); //si el campo de texto esta vacio,se resalta en rojo
-        }else{
-            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
-        }
-    }
+//    private void colorTxtRazon(){
+//        if (this.ventana.verTxtRazon().getText().trim().isEmpty()) {
+//            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.RED, 1)); //si el campo de texto esta vacio,se resalta en rojo
+//        }else{
+//            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
+//        }
+//    }
 }

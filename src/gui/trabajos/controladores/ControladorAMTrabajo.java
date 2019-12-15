@@ -32,6 +32,7 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -138,10 +139,17 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             this.ventana.getjFechaAprobacion().setEnabled(false);
 
             //FechaFinalizacion
+            if(fechaAprobacion.compareTo(Date.from(Instant.now())) < 0){
+                //Muestro la fecha actual como referencia en el dateChooser de fechaFinalizacion
+                this.ventana.getjFechaFinalizacion().setDate(Date.from(Instant.now()));
+            }else{
+                //Muestro la fechaAprobacion como referencia en el dateChooser de fechaFinalizacion
+                this.ventana.getjFechaFinalizacion().setDate(fechaAprobacion);
+            }
             //Pone automaticamente como sugerencia la fecha de hoy
-            LocalDate fechaF = LocalDate.now();
-            Date fechaFinalizacion = Date.from(fechaF.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            this.ventana.getjFechaFinalizacion().setDate(fechaFinalizacion);
+//            LocalDate fechaF = LocalDate.now();
+//            Date fechaFinalizacion = Date.from(fechaF.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//            this.ventana.getjFechaFinalizacion().setDate(fechaAprobacion);
             
             //Areas
             List<Area> listaAreas = this.unTrabajo.verAreas();
@@ -594,7 +602,6 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
      * Le da color al borde de los campos dateChooser de VentanaAMTrabajos
      */
     private void colorCalendarios(){
-
         if (this.ventana.getjFechaPresentacion().getCalendar() == null) {
             this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
