@@ -430,23 +430,25 @@ public class GestorTrabajos implements IGestorTrabajos {
                 return TRABAJO_REEMPLAZAR_PROFESOR_ERROR;
             }
             if (fechaHasta == null) {
-                    return TRABAJO_FINALIZAR_ALUMNO_ERROR;
+                    return ERROR_FECHA_EXPOSICION;
             }
-
+            //VERIFICO QUE EL NUEVO PROFESOR NO ESTE YA EN EL TRABAJO
             for (RolEnTrabajo ret : trabajo.verProfesoresConRoles()) {
                 if (ret.verProfesor().equals(nuevoProfesor)) {
-                    return TRABAJO_REEMPLAZAR_PROFESOR_DUPLICADO;
+                        return TRABAJO_REEMPLAZAR_PROFESOR_DUPLICADO;
                 }
-
-                if(ret.verProfesor().equals(profesorReemplazado)) {
+            }
+            //REEMPLAZO EL PROFESOR DESEADO CON OTRO QUE NO PARTICIPE EN EL TRABAJO
+            for (RolEnTrabajo ret : trabajo.verProfesoresConRoles()) {
+                if (ret.verProfesor().equals(profesorReemplazado)) {
                     if (fechaHasta.isBefore(ret.verFechaDesde())) {
                         return TRABAJO_REEMPLAZAR_PROFESOR_ERROR;
                     }
                     ret.asignarFechaHasta(fechaHasta);
                     if (razon.isEmpty()) {
                         ret.asignarRazon(VALORES_NULOS); //SI NO TIENE RAZON DE BAJA LE ASIGNA UN -
-                    }else{
-                        ret.asignarRazon(razon);
+                    } else {
+                        ret.asignarRazon(razon.trim());
                     }
                     //CREA UN NUEVO RET SIN FechaHasta NI Razon
                     trabajo.agregarRolEnTrabajo(gRet.nuevoRolEnTrabajo(nuevoProfesor, ret.verRol(), fechaHasta));
@@ -500,7 +502,7 @@ public class GestorTrabajos implements IGestorTrabajos {
                     if (razon.isEmpty()) {
                         aet.asignarRazon(VALORES_NULOS); //SI NO TIENE RAZON DE BAJA LE ASIGNA UN -
                     }else{
-                        aet.asignarRazon(razon);
+                        aet.asignarRazon(razon.trim());
                     }
 
                     String resultado = this.escribirArchivo();

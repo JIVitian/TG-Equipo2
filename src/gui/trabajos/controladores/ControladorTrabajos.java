@@ -23,6 +23,7 @@ import gui.trabajos.vistas.VentanaTrabajos;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -284,11 +285,11 @@ public class ControladorTrabajos implements IControladorTrabajos{
             }
             matrizt[i][2] = areas ;
             
-            matrizt[i][3] = listaTrabajos.get(i).verFechaPresentacion().toString();
-            matrizt[i][4] = listaTrabajos.get(i).verFechaAprobacion().toString();
+            matrizt[i][3] = listaTrabajos.get(i).verFechaPresentacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            matrizt[i][4] = listaTrabajos.get(i).verFechaAprobacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             
             if(listaTrabajos.get(i).verFechaFinalizacion() != null){
-                matrizt[i][5] = listaTrabajos.get(i).verFechaFinalizacion().toString();
+                matrizt[i][5] = listaTrabajos.get(i).verFechaFinalizacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             } else{
                 matrizt[i][5] = "-";
             }
@@ -342,10 +343,10 @@ public class ControladorTrabajos implements IControladorTrabajos{
             matrizAl[i][0] = trabajo.verAlumnos().get(i).verAlumno().verApellidos();
             matrizAl[i][1] = trabajo.verAlumnos().get(i).verAlumno().verNombres();
             matrizAl[i][2] = trabajo.verAlumnos().get(i).verAlumno().verCX();
-            matrizAl[i][3] = trabajo.verAlumnos().get(i).verFechaDesde().toString();
+            matrizAl[i][3] = trabajo.verAlumnos().get(i).verFechaDesde().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
              if( trabajo.verAlumnos().get(i).verFechaHasta() != null){
-                 matrizAl[i][4] = trabajo.verAlumnos().get(i).verFechaHasta().toString();
+                 matrizAl[i][4] = trabajo.verAlumnos().get(i).verFechaHasta().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             } else{
             matrizAl[i][4] = "-";
             }
@@ -385,10 +386,13 @@ public class ControladorTrabajos implements IControladorTrabajos{
         for (int i = 0; i < trabajo.verProfesoresConRoles().size(); i++) {
             matrizPr[i][0] = trabajo.verProfesoresConRoles().get(i).verProfesor().verApellidos() + "," + trabajo.verProfesoresConRoles().get(i).verProfesor().verNombres() ;
             matrizPr[i][1] = trabajo.verProfesoresConRoles().get(i).verRol().toString();
-            matrizPr[i][2] = trabajo.verProfesoresConRoles().get(i).verFechaDesde().toString();
+//            matrizPr[i][2] = trabajo.verProfesoresConRoles().get(i).verFechaDesde().toString();
+            matrizPr[i][2] = trabajo.verProfesoresConRoles().get(i).verFechaDesde().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
 
              if( trabajo.verProfesoresConRoles().get(i).verFechaHasta() != null){
-                 matrizPr[i][3] = trabajo.verProfesoresConRoles().get(i).verFechaHasta().toString();
+//                 matrizPr[i][3] = trabajo.verProfesoresConRoles().get(i).verFechaHasta().toString();
+                matrizPr[i][3] = trabajo.verProfesoresConRoles().get(i).verFechaDesde().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             } else{
             matrizPr[i][3] = "-";
             }

@@ -27,6 +27,10 @@ public class VentanaModificarProfesor extends JDialog {
         initComponents();
     }
 
+    public JDateChooser verFechaDesde() {
+        return fechaDesde;
+    }
+    
     public JDateChooser verFechaHasta() {
         return fechaHasta;
     }
@@ -51,6 +55,7 @@ public class VentanaModificarProfesor extends JDialog {
         jSpinFieldBeanInfo1 = new com.toedter.components.JSpinFieldBeanInfo();
         jSpinFieldBeanInfo2 = new com.toedter.components.JSpinFieldBeanInfo();
         jTextField5 = new javax.swing.JTextField();
+        jSpinField1 = new com.toedter.components.JSpinField();
         txtRazon = new javax.swing.JTextField();
         etqFechaHasta = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
@@ -59,6 +64,8 @@ public class VentanaModificarProfesor extends JDialog {
         etqRazon = new javax.swing.JLabel();
         comboProfesores = new javax.swing.JComboBox<>();
         etqNuevoProfesor = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        fechaDesde = new com.toedter.calendar.JDateChooser();
 
         jTextField5.setText("jTextField5");
         jTextField5.setToolTipText("");
@@ -104,50 +111,57 @@ public class VentanaModificarProfesor extends JDialog {
 
         etqNuevoProfesor.setText("Nuevo Profesor:");
 
+        jLabel1.setText("Desde:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAceptar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCancelar)
+                .addGap(16, 16, 16))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnAceptar)
-                        .addGap(13, 13, 13)
-                        .addComponent(btnCancelar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(etqRazon)
-                            .addComponent(etqNuevoProfesor)
-                            .addComponent(etqFechaHasta))
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtRazon)
-                            .addComponent(comboProfesores, 0, 315, Short.MAX_VALUE))))
+                    .addComponent(etqFechaHasta)
+                    .addComponent(etqRazon)
+                    .addComponent(jLabel1)
+                    .addComponent(etqNuevoProfesor))
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboProfesores, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtRazon)
+                    .addComponent(fechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                    .addComponent(fechaDesde, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(etqFechaHasta))
+                    .addComponent(jLabel1)
+                    .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(etqFechaHasta, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fechaHasta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(etqRazon)
                     .addComponent(txtRazon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(etqNuevoProfesor)
-                    .addComponent(comboProfesores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboProfesores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(etqNuevoProfesor))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar)
                     .addComponent(btnCancelar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -177,7 +191,10 @@ public class VentanaModificarProfesor extends JDialog {
     private javax.swing.JLabel etqFechaHasta;
     private javax.swing.JLabel etqNuevoProfesor;
     private javax.swing.JLabel etqRazon;
+    private com.toedter.calendar.JDateChooser fechaDesde;
     private com.toedter.calendar.JDateChooser fechaHasta;
+    private javax.swing.JLabel jLabel1;
+    private com.toedter.components.JSpinField jSpinField1;
     private com.toedter.components.JSpinFieldBeanInfo jSpinFieldBeanInfo1;
     private com.toedter.components.JSpinFieldBeanInfo jSpinFieldBeanInfo2;
     private javax.swing.JTextField jTextField5;

@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -40,6 +41,13 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         this.unAET = unAET;
         this.ventana = new VentanaModificarAlumno(this, ventanaPadre);
         this.ventana.setTitle(TRABAJO_MODIFICAR);
+        //CONVIERTO LOCALDATE (fechaDesde) A DATE.
+        Date date = Date.from(unAET.verFechaDesde().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        //EL JDateChooser MUESTRA LA fecgaDesde DEL PROFESOR SELECCIONADO AL ABRIRSE LA VENTANA (Como referencia).
+        this.ventana.verFechaHasta().setDate(date);
+        //Mostaramos la fechaDesde para mostrar como referencia.
+        this.ventana.verFechaDesde().setText(unAET.verFechaDesde().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        this.ventana.verFechaDesde().setEditable(false);
         
         this.ventana.verTxtRazon().addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
@@ -152,12 +160,11 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
     
     
     private void colorCalendario(){
-        if (this.ventana.verFechaHasta().getCalendar() == null) {
+        if (this.ventana.verFechaHasta().getCalendar() == null || obtenerFechaDeJDateChooser(this.ventana.verFechaHasta()).isBefore(unAET.verFechaDesde())) {
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         }else{
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
-    
     
 }

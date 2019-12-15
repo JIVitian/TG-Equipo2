@@ -31,6 +31,7 @@ import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -408,6 +409,24 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
                 colorJurados();
             }
         });
+        
+        this.ventana.getjFechaAprobacion().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
+            if ("date".equals(e.getPropertyName())) {
+                colorCalendarios();
+            }
+        });
+        
+        this.ventana.getjFechaPresentacion().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
+            if ("date".equals(e.getPropertyName())) {
+                colorCalendarios();
+            }
+        });
+        
+        this.ventana.getjFechaFinalizacion().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
+            if ("date".equals(e.getPropertyName())) {
+                colorCalendarios();
+            }
+        });    
     }
 
     /**
@@ -523,16 +542,25 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
     }
     
     private void colorCalendarios(){
-        if (this.ventana.getjFechaAprobacion().getCalendar() == null) {
+
+        if (this.ventana.getjFechaPresentacion().getCalendar() == null) {
+            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        }else{
+            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+        
+        if (this.ventana.getjFechaAprobacion().getCalendar() == null || this.ventana.getjFechaPresentacion().getDate().compareTo(this.ventana.getjFechaAprobacion().getDate()) > 0) {
             this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         }else{
             this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
         
-        if (this.ventana.getjFechaPresentacion().getCalendar() == null) {
-            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        }else{
-            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        if(this.ventana.getjFechaFinalizacion().isEnabled()){
+            if(this.ventana.getjFechaFinalizacion().getCalendar() == null || this.ventana.getjFechaAprobacion().getDate().compareTo(this.ventana.getjFechaFinalizacion().getDate()) > 0){
+                this.ventana.getjFechaFinalizacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            }else{
+                this.ventana.getjFechaFinalizacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            }
         }
     }
 }
