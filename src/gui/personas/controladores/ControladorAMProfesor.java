@@ -232,6 +232,7 @@ public class ControladorAMProfesor implements IControladorAMProfesor{
      */ 
     @Override
     public void txtDocumentoPresionarTecla(KeyEvent evt) {
+        int cantDigit = this.ventana.verTxtDocumento().getText().length();
         char c = evt.getKeyChar();            
         if (!Character.isDigit(c)) { //sólo se aceptan numeros, Enter, Del, Backspace y espacio
             switch(c) {
@@ -252,7 +253,12 @@ public class ControladorAMProfesor implements IControladorAMProfesor{
             }
         }
         else{
+            //se quita el contorno rojo al pulsar un caracter valido (el campo deja de estar vacio)
             this.ventana.verTxtDocumento().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            
+            //cuando la cantidad de digitos es mayor que la permitida, se eliminan los digitos siguientes
+            if(cantDigit>7)
+                evt.consume();
         }
     }
     

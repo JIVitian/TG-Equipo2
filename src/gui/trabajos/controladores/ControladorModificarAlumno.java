@@ -16,69 +16,108 @@ import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
 
 public class ControladorModificarAlumno implements IControladorModificarAlumno {
-    private VentanaModificarAlumno ventana;
+    private final VentanaModificarAlumno ventana;
     private Trabajo unTrabajo;
     private AlumnoEnTrabajo unAET;
     
-//    public ControladorModificarAlumno(Dialog ventanaPadre) {
-//        this.ventana = new VentanaModificarAlumno(this, ventanaPadre);
-//        this.ventana.setTitle(TRABAJO_MODIFICAR);
-//        this.ventana.setLocationRelativeTo(null);
-//        this.ventana.setVisible(true);
-//    }
-    
+    /**
+     * Constructor
+     * Muestra la ventana de ModificarAlumno de forma modal
+     * @param ventanaPadre
+     * @param unTrabajo
+     * @param unAET
+     */
     public ControladorModificarAlumno(Dialog ventanaPadre, Trabajo unTrabajo, AlumnoEnTrabajo unAET) {
         this.unTrabajo = unTrabajo;
         this.unAET = unAET;
         this.ventana = new VentanaModificarAlumno(this, ventanaPadre);
-        this.ventana.setTitle(TRABAJO_MODIFICAR);
-        //CONVIERTO LOCALDATE (fechaDesde) A DATE.
-        Date date = Date.from(unAET.verFechaDesde().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        //EL JDateChooser MUESTRA LA fecgaDesde DEL PROFESOR SELECCIONADO AL ABRIRSE LA VENTANA (Como referencia).
-        this.ventana.verFechaHasta().setDate(date);
-        //Mostaramos la fechaDesde para mostrar como referencia.
-        this.ventana.verFechaDesde().setText(unAET.verFechaDesde().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        this.ventana.verFechaDesde().setEditable(false);
         
-        this.ventana.verTxtRazon().addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
+        this.setearVentana();
+        this.agregarListeners();
         
         this.ventana.setLocationRelativeTo(null);
         this.ventana.setVisible(true);
     }
     
+    /**
+     * Inicializa los campos de VentanaModificarAlumno
+     */ 
+    private void setearVentana(){
+        this.ventana.setTitle(TRABAJO_MODIFICAR);
+        
+        //Convierto fechaDesde de LocalDate a Date
+        Date date = Date.from(this.unAET.verFechaDesde().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        //Muestro y desabilito la fechaDesde
+        this.ventana.verFechaDesde().setDate(date);
+        this.ventana.verFechaDesde().setEnabled(false);
+        
+        //Muestro la fechaDesde como referencia en el dateChooser de fechaHasta
+        this.ventana.verFechaHasta().setDate(date);
+    }
     
+    /**
+     * Agrega listeners a cada elemento de la ventana, recuadrandolo
+     * Recuadra en rojo cuando sea incorrecto
+     * Recuadra en gris cuando sea valido
+     */ 
+    private void agregarListeners(){
+        //-----------------------------------------------------------------------------------//
+        //Agrego listeners a los elementos de la ventana para marcar en rojo cuando esten mal//
+        //-----------------------------------------------------------------------------------//
+       
+        //Listener de txtRazon
+        this.ventana.verTxtRazon().addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                colorTxtRazon();
+            }
+        });
+        
+        //Listener fechaHasta
+        this.ventana.verFechaHasta().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
+            if ("date".equals(e.getPropertyName())) {
+                colorCalendarios();
+            }
+        });
+    }
+    
+    /**
+     * Acción a ejecutar cuando se selecciona el botón Guardar
+     * @param evt evento
+     */   
     @Override
     public void btnAceptarClic(ActionEvent evt) {
         this.guardar();
     }
     
-    
+    /**
+     * Finaliza un Alumno en Trabajo
+     * Muestra los correspondientes mensajes flotantes si la operacion tuvo exito o no
+     */  
     private void guardar(){
         LocalDate fechaHasta = obtenerFechaDeJDateChooser(this.ventana.verFechaHasta());
         String razon = this.ventana.verTxtRazon().getText();
     
         IGestorTrabajos gsT = GestorTrabajos.instanciar();
         int confirmacion = JOptionPane.showConfirmDialog(ventana, "¿Desea finalizar el Alumno?");
+        
         if (confirmacion == 0) {//Si el usuario elige "Si" se procedera a midificar el trabajo seleccionado
         String resultado = gsT.finalizarAlumno(this.unTrabajo, this.unAET.verAlumno(), fechaHasta, razon);
         
             if (!resultado.equals(IGestorTrabajos.EXITO)) {
                 gsT.cancelar();
                 JOptionPane.showMessageDialog(null, resultado, TRABAJO_MODIFICAR, JOptionPane.ERROR_MESSAGE);
-                colorCalendario();
+                colorCalendarios();
             }
             else{
                 JOptionPane.showMessageDialog(this.ventana, "El alumno se finalizo exitosamente", TRABAJO_MODIFICAR, JOptionPane.PLAIN_MESSAGE);
@@ -87,7 +126,10 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
 
-    
+    /**
+     * Acción a ejecutar cuando se selecciona el botón Cancelar
+     * @param evt evento
+     */    
     @Override
     public void btnCancelarClic(ActionEvent evt) {
         IGestorTrabajos gsT = GestorTrabajos.instanciar();
@@ -95,7 +137,10 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         this.ventana.dispose();
     }
 
-    
+    /**
+     * Acción a ejecutar cuando se presiona una tecla en el campo txtRazon
+     * @param evt evento
+     */
     @Override
     public void txtRazonPresionarTecla(KeyEvent evt) {
         char c = evt.getKeyChar();            
@@ -121,7 +166,10 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
 
-    
+    /**
+     * Acción a ejecutar cuando se presiona una tecla en el campo fechaHasta
+     * @param evt evento
+     */
     @Override
     public void fechaHastaPresionarTecla(KeyEvent evt) {
         char c = evt.getKeyChar();            
@@ -131,12 +179,12 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
                     this.guardar();
                     break;
                 case KeyEvent.VK_BACK_SPACE:  
-                    colorCalendario();
+                    colorCalendarios();
                     break;
                 case KeyEvent.VK_ESCAPE:
                     this.btnCancelarClic(null);
                 case KeyEvent.VK_DELETE:
-                    colorCalendario();
+                    colorCalendarios();
                     break;
                 case KeyEvent.VK_SPACE:
                     break;
@@ -146,7 +194,12 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
 //        }
     }
     
-    
+    /**
+     * Obtiene la fecha de un campo JDateChooser
+     * Si no hay seleccionada una fecha devuelve null
+     * @param dateChooser campo JDateChooser
+     * @return LocalDate - fecha de un campo JDateChooser
+     */
     private LocalDate obtenerFechaDeJDateChooser(JDateChooser dateChooser) { //Convierte a LocalDate la fecha obtenida del JDateChooser
         Date date;
         if (dateChooser.getCalendar() != null) {
@@ -158,13 +211,25 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
     
-    
-    private void colorCalendario(){
+    /**
+     * Le da color al borde de los campos dateChooser de VentanaModificarAlumno
+     */
+    private void colorCalendarios(){
         if (this.ventana.verFechaHasta().getCalendar() == null || obtenerFechaDeJDateChooser(this.ventana.verFechaHasta()).isBefore(unAET.verFechaDesde())) {
-            this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.verFechaHasta().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
     
+    /**
+     * Le da color al borde del campo txtRazon de VentanaModificarAlumno
+     */
+    private void colorTxtRazon(){
+        if (this.ventana.verTxtRazon().getText().trim().isEmpty()) {
+            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.RED, 1)); //si el campo de texto esta vacio,se resalta en rojo
+        }else{
+            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
+        }
+    }
 }

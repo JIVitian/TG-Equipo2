@@ -241,6 +241,7 @@ public class ControladorAMAlumno implements IControladorAMAlumno {
      */ 
     @Override
     public void txtDocumentoPresionarTecla(KeyEvent evt) {
+        int cantDigit = this.ventana.verTxtDocumento().getText().length();
         char c = evt.getKeyChar();
         if (!Character.isDigit(c)) {
         // Sólo se pueden escribir números, Enter, Del y Backspace
@@ -261,9 +262,14 @@ public class ControladorAMAlumno implements IControladorAMAlumno {
                     evt.consume(); //consume el evento para que no sea procesado por la fuente
             }
         }
-        else
+        else{
             //se quita el contorno rojo al pulsar un caracter valido (el campo deja de estar vacio)
             this.ventana.verTxtDocumento().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            
+            //cuando la cantidad de digitos es mayor que la permitida, se eliminan los digitos siguientes
+            if(cantDigit>7)
+                    evt.consume();
+        }
     }
     
     /**

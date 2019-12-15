@@ -19,7 +19,7 @@ public class VentanaModificarProfesor extends JDialog {
     /**
      * Constructor 
      * @param controlador controlador de la ventana
-     * @param ventanaPadre ventana padre (VentanaTrabajos en este caso)
+     * @param ventanaPadre ventana padre (VentanaAMTrabajo en este caso)
      */
     public VentanaModificarProfesor(IControladorModificarProfesor controlador, Dialog ventanaPadre) {
         super(ventanaPadre, true);
@@ -142,9 +142,9 @@ public class VentanaModificarProfesor extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(etqFechaHasta, javax.swing.GroupLayout.Alignment.TRAILING)

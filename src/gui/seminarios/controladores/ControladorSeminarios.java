@@ -14,6 +14,8 @@ import gui.trabajos.modelos.Trabajo;
 import gui.trabajos.vistas.VentanaTrabajos;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
@@ -26,14 +28,20 @@ public class ControladorSeminarios implements IControladorSeminarios {
     private Trabajo elTrabajo;
     
     public ControladorSeminarios(VentanaTrabajos ventanaPadre, Trabajo elTrabajo){
-        this.elTrabajo = elTrabajo;
-        this.ventana = new VentanaSeminarios(this,ventanaPadre,true);
-        this.configurarTabla();
-        this.ventana.setModificarEnabled(false);
-        this.ventana.setTitle("Seminarios");
-        this.ventana.setTxtTituloTrabajo("Seminarios del trabajo \"" + this.elTrabajo.verTitulo() + "\"");
-        this.ventana.setVisible(true);
-        this.ventana.setLocationRelativeTo(null);
+        try{
+            this.elTrabajo = elTrabajo;
+            this.ventana = new VentanaSeminarios(this,ventanaPadre,true);
+            this.configurarTabla();
+            this.ventana.setModificarEnabled(false);
+            this.ventana.setTitle("Seminarios");
+            this.ventana.setTxtTituloTrabajo("Seminarios del trabajo \"" + this.elTrabajo.verTitulo() + "\"");
+            this.ventana.setVisible(true);
+            this.ventana.setLocationRelativeTo(null);
+        }
+        catch(NullPointerException e){
+            JOptionPane.showMessageDialog(null, "No se encontró el trabajo especificado", "Error de paso de datos", ERROR_MESSAGE);
+            this.ventana.dispose();
+        }
     }
     
     /**

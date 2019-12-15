@@ -18,7 +18,7 @@ public class VentanaModificarAlumno extends JDialog{
     /**
      * Constructor 
      * @param controlador controlador de la ventana
-     * @param ventanaPadre ventana padre (VentanaTrabajos en este caso)
+     * @param ventanaPadre ventana padre (VentanaAMTrabajo en este caso)
      */
     public VentanaModificarAlumno(IControladorModificarAlumno controlador, Dialog ventanaPadre) {
         super(ventanaPadre, true);
@@ -172,5 +172,4 @@ public class VentanaModificarAlumno extends JDialog{
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField txtRazon;
     // End of variables declaration//GEN-END:variables
-
 }

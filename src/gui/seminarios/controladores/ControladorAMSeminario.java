@@ -8,6 +8,7 @@ package gui.seminarios.controladores;
 import gui.interfaces.IControladorAMSeminario;
 import static gui.interfaces.IGestorSeminarios.EXITO;
 import gui.seminarios.modelos.AddItemException;
+import gui.seminarios.modelos.GestorSeminarios;
 import gui.seminarios.modelos.ModeloComboNotas;
 import gui.seminarios.modelos.NotaAprobacion;
 import gui.seminarios.modelos.Seminario;
@@ -15,7 +16,6 @@ import gui.seminarios.vistas.VentanaAMSeminarios;
 import gui.seminarios.vistas.VentanaSeminarios;
 import gui.trabajos.modelos.Trabajo;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -108,7 +108,8 @@ public class ControladorAMSeminario implements IControladorAMSeminario {
                 }
             }
         }
-        Collections.sort(this.elTrabajo.verSeminarios());
+        GestorSeminarios gS = GestorSeminarios.instanciar();
+        gS.guardarSeminarios();
         this.ventana.dispose();
     }
     
@@ -139,7 +140,6 @@ public class ControladorAMSeminario implements IControladorAMSeminario {
                 JOptionPane.showMessageDialog(this.ventana, e.getMessage(), "Error", ERROR_MESSAGE);
             }
         }
-        Collections.sort(this.elTrabajo.verSeminarios());
         this.ventana.dispose();
     }
 

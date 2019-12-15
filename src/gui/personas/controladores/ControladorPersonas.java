@@ -284,7 +284,6 @@ public class ControladorPersonas implements IControladorPersonas{
      */
     @Override
     public void ventanaGanaFoco(WindowEvent evt) {
-        
         //La ventana gana el foco cuando:
         //  1. Se presiona el botón "Personas" en la ventana principal
 	//  2. Se vuelve de la ventana de alta de una persona

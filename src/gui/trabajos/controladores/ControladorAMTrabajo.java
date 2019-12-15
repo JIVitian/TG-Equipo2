@@ -36,7 +36,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -46,17 +45,18 @@ import javax.swing.event.ListSelectionEvent;
 
 
 public class ControladorAMTrabajo implements IControladorAMTrabajo{
-    private VentanaAMTrabajo ventana;
+    private final VentanaAMTrabajo ventana;
+    private Trabajo unTrabajo;
     IGestorTrabajos gsT ;
     IGestorPersonas gsP;
     IGestorAreas gsA;
     IGestorRolesEnTrabajos gsRET;
     IGestorAlumnosEnTrabajos gsAET;
-    private Trabajo unTrabajo;
     
     /**
      * Constructor
-     * @param ventanaPadre (VentanaAreas en este caso)
+     * Muestra la ventana de AMTrabajos de forma modal
+     * @param ventanaPadre (VentanaTrabajos en este caso)
      * @param unTrabajo
      */    
     public ControladorAMTrabajo(Dialog ventanaPadre, Trabajo unTrabajo) {
@@ -75,12 +75,11 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         this.ventana.setVisible(true);
     }
     
+    /**
+     * Clase anonima creada para darle un formato a las comboBox de Tutor y Cotutor
+     */ 
     private class ModeloComboTutorCotutor extends DefaultComboBoxModel{
         public ModeloComboTutorCotutor() {
-//            List<Profesor> listaProfes = gsP.buscarProfesores(null);
-//            for (int i = 0; i < listaProfes.size(); i++) {
-//            profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + " - " + listaProfes.get(i).verDNI();
-//        }
             for (Profesor p : gsP.buscarProfesores(null)) {
                 this.addElement(p);
             }
@@ -93,19 +92,25 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
     };
     
+    /**
+     * Inicializa los campos de VentanaAMTrabajos 
+     * segun se desee crear un nuevo trabajo o finalizar uno ya existente
+     */ 
     private void setearVentana(){
-//        this.ventana.getjComboTutor().setModel(new ModeloComboTutorCotutor());
-//        this.ventana.getjComboCotutor().setModel(new ModeloComboTutorCotutor());
-        
         if (this.unTrabajo == null) {
             this.ventana.setTitle(IControladorTrabajos.TRABAJO_NUEVO);
+            
+            //FechaPresentacion
+            //Pone automaticamente como sugerencia la fecha de hoy
+            LocalDate fechaP = LocalDate.now();
+            Date fechaPresentacion = Date.from(fechaP.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.ventana.getjFechaPresentacion().setDate(fechaPresentacion);
+            
+            //Deshabilito el dateChooser de fechaFinalizacion
             this.ventana.getjFechaFinalizacion().setEnabled(false);
             
             ((ModeloComboTutorCotutor)this.ventana.getjComboTutor().getModel()).seleccionarTutorCotutor(null);
             ((ModeloComboTutorCotutor)this.ventana.getjComboCotutor().getModel()).seleccionarTutorCotutor(null);
-//            this.ventana.getjComboTutor().setSelectedItem(null);
-//            this.ventana.getjComboCotutor().setSelectedItem(null);
-            
             
         } else {
             this.ventana.setTitle(IControladorTrabajos.TRABAJO_MODIFICAR);
@@ -118,14 +123,25 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             this.ventana.verTxtDuracion().setText(Integer.toString(this.unTrabajo.verDuracion()));
             this.ventana.verTxtDuracion().setEnabled(false);
             
-            //Fechas
-            GregorianCalendar fechaP = GregorianCalendar.from(this.unTrabajo.verFechaPresentacion().atStartOfDay(ZoneId.systemDefault()));
-            this.ventana.getjFechaPresentacion().setCalendar(fechaP);
+            //FechaPresentacion
+            //Convierto de LocalDate a Date
+            Date fechaPresentacion = Date.from(this.unTrabajo.verFechaPresentacion().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            //Muestro y desabilito el dateChooser de fechaDesde
+            this.ventana.getjFechaPresentacion().setDate(fechaPresentacion);
             this.ventana.getjFechaPresentacion().setEnabled(false);
             
-            GregorianCalendar fechaAp = GregorianCalendar.from(this.unTrabajo.verFechaAprobacion().atStartOfDay(ZoneId.systemDefault()));
-            this.ventana.getjFechaAprobacion().setCalendar(fechaAp);
+            //FechaAprobacion
+            //Convierto de LocalDate a Date
+            Date fechaAprobacion = Date.from(this.unTrabajo.verFechaAprobacion().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            //Muestro y desabilito el dateChooser de fechaDesde
+            this.ventana.getjFechaAprobacion().setDate(fechaAprobacion);
             this.ventana.getjFechaAprobacion().setEnabled(false);
+
+            //FechaFinalizacion
+            //Pone automaticamente como sugerencia la fecha de hoy
+            LocalDate fechaF = LocalDate.now();
+            Date fechaFinalizacion = Date.from(fechaF.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.ventana.getjFechaFinalizacion().setDate(fechaFinalizacion);
             
             //Areas
             List<Area> listaAreas = this.unTrabajo.verAreas();
@@ -158,11 +174,9 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             
             //Cotutor
             ((ModeloComboTutorCotutor)this.ventana.getjComboCotutor().getModel()).seleccionarTutorCotutor(this.unTrabajo.verTutorOCotutor(Rol.COTUTOR));
-//            this.ventana.getjComboCotutor().setSelectedItem(this.unTrabajo.verTutorOCotutor(Rol.COTUTOR));
             this.ventana.getjComboCotutor().setEnabled(false);
             
             //Jurado
-//            List<RolEnTrabajo> listaRET = this.unTrabajo.verProfesoresConRoles();
             List<Profesor> listaJurado = this.unTrabajo.verJurado();
             List<Profesor> listaProfesores = this.gsP.buscarProfesores(null);
             
@@ -177,18 +191,23 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
     }
     
+    /**
+     * Actualiza los elementos de la VentanaAMTrabajos
+     * Esto incluye las tablas de Areas, Alumnos y Jurados
+     * Ademas llena los comboBox de Tutor y Cotutor
+     */ 
     private void refrescar() {            //utilizo este metodo para llenar las tablas y los combo box
-        List<Profesor> listaProfes = this.gsP.buscarProfesores(null);  //creo una lista con todos los profesores
+        List<Profesor> listaProfesores = this.gsP.buscarProfesores(null);  //creo una lista con todos los profesores
         List<Alumno> listaAlumnos = this.gsP.buscarAlumnos(null);      //creo una lista con todos los alumnos
         List<Area> listaAreas = this.gsA.buscarAreas(null);          //creo una lista con todos las areas
         
         //Lleno la tabla de areas
-        String matrizA[][] = new String[(listaAreas.size())] [1];
+        String[][] matrizAreas = new String[(listaAreas.size())] [1];
         for (int i = 0; i < listaAreas.size(); i++) {
-            matrizA[i][0] = listaAreas.get(i).verNombre();
+            matrizAreas[i][0] = listaAreas.get(i).verNombre();
         }
         this.ventana.getjTablaAreas().setModel(new javax.swing.table.DefaultTableModel(
-            matrizA,
+            matrizAreas,
             new String [] {
                 "Area"
             }
@@ -199,29 +218,30 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             }
         });
 
-        //Con este arreglo de cadenas armare los comboBox
+//        //Con este arreglo de cadenas armare los comboBox
 //        String profesores[] = new String[listaProfes.size()];
 //        for (int i = 0; i < listaProfes.size(); i++) {
 //            profesores[i] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres()  + " - " + listaProfes.get(i).verDNI();
 //        }
-        
-        //Lleno los comboBox
+//        
+//        //Lleno los comboBox
 //        this.ventana.getjComboTutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));         
 //        this.ventana.getjComboCotutor().setModel(new javax.swing.DefaultComboBoxModel<>(profesores));
         this.ventana.getjComboTutor().setModel(new ModeloComboTutorCotutor());
         this.ventana.getjComboCotutor().setModel(new ModeloComboTutorCotutor());
 
         //Llena la tabla de Jurados
-        String matrizp[][] = new String[(listaProfes.size())] [2];
-        for (int i = 0; i < listaProfes.size(); i++) {
-            matrizp[i][0] = listaProfes.get(i).verApellidos() + ", " + listaProfes.get(i).verNombres() ;
+        String[][] matrizProfesores = new String[(listaProfesores.size())] [2];
+        for (int i = 0; i < listaProfesores.size(); i++) {
+            matrizProfesores[i][0] = listaProfesores.get(i).verApellidos() + ", " + listaProfesores.get(i).verNombres() ;
         }
         
-        for (int i = 0; i < listaProfes.size(); i++) {
-            matrizp [i][1] = Integer.toString(listaProfes.get(i).verDNI());
+        for (int i = 0; i < listaProfesores.size(); i++) {
+            matrizProfesores [i][1] = Integer.toString(listaProfesores.get(i).verDNI());
         }
+        
         this.ventana.getjTablaJurado().setModel(new javax.swing.table.DefaultTableModel(
-            matrizp,
+            matrizProfesores,
             new String [] {
                 "Jurado", "DNI"
             }
@@ -233,16 +253,16 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         });
 
         //Llena la tabla de Alumnos
-        String[][] matrizal = new String[(listaAlumnos.size())] [2];             
+        String[][] matrizAlumnos = new String[(listaAlumnos.size())] [2];             
         for (int i = 0; i < listaAlumnos.size(); i++) {
-            matrizal[i][0] = listaAlumnos.get(i).verApellidos() + ", " + listaAlumnos.get(i).verNombres();
+            matrizAlumnos[i][0] = listaAlumnos.get(i).verApellidos() + ", " + listaAlumnos.get(i).verNombres();
         }
         for (int i = 0; i < listaAlumnos.size(); i++) {
-            matrizal [i][1] = listaAlumnos.get(i).verCX();
+            matrizAlumnos [i][1] = listaAlumnos.get(i).verCX();
         }
         
         this.ventana.getjTablaAlumnos().setModel(new javax.swing.table.DefaultTableModel(
-            matrizal,
+            matrizAlumnos,
             new String [] {
                 "Alumnos", "CX"
             }
@@ -268,11 +288,14 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         if (this.unTrabajo == null) {
             this.nuevoTrabajo();
         } else {
-        this.modificarTrabajo();
+            this.modificarTrabajo();
         }
     }
     
-    public void modificarTrabajo(){
+    /**
+     * Finaliza el trabajo que se haya seleccionado
+     */ 
+    private void modificarTrabajo(){
         LocalDate fechaF = this.obtenerFechaDeJDateChooser(this.ventana.getjFechaFinalizacion());
         
         String resultado = gsT.finalizarTrabajo(this.unTrabajo, fechaF);
@@ -286,7 +309,11 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
     }
     
-    public void nuevoTrabajo(){
+    /**
+     * Crea un nuevo trabajo donde sus parametros seran los valores leidos 
+     * de los campos de la VentanaAMTrabajos
+     */ 
+    private void nuevoTrabajo(){
         //Titulo del trabajo
         String titulo = this.ventana.getTxtTitulo().getText().trim();
         
@@ -299,8 +326,8 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
         
         //Fechas del Trabajo
-        LocalDate fechaP = obtenerFechaDeJDateChooser(this.ventana.getjFechaPresentacion());
-        LocalDate fechaA = obtenerFechaDeJDateChooser(this.ventana.getjFechaAprobacion());
+        LocalDate fechaPres = obtenerFechaDeJDateChooser(this.ventana.getjFechaPresentacion());
+        LocalDate fechaAp = obtenerFechaDeJDateChooser(this.ventana.getjFechaAprobacion());
         
         //Areas del trabajo
         List<Area> listaAreas = new ArrayList<>();
@@ -311,38 +338,35 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
         
         //Roles En Trabajo
-        //Jurados
-//        List<Profesor> listaJurados = new ArrayList<Profesor>();
         List<RolEnTrabajo> listaRET = new ArrayList<>();
-//        
+
+        //Jurados
         int[] seleccionadosJ = this.ventana.getjTablaJurado().getSelectedRows();
         for(int i : seleccionadosJ){
-            int dniJ ;
-            dniJ = Integer.parseInt(this.ventana.getjTablaJurado().getValueAt(i, 1).toString());
-            listaRET.add(gsRET.nuevoRolEnTrabajo(gsP.dameProfesor(dniJ), Rol.JURADO, fechaA));
+            int dniJurado ;
+            dniJurado = Integer.parseInt(this.ventana.getjTablaJurado().getValueAt(i, 1).toString());
+            listaRET.add(gsRET.nuevoRolEnTrabajo(gsP.dameProfesor(dniJurado), Rol.JURADO, fechaAp));
         }
         //Tutor
-        int dniT;
         if (this.ventana.getjComboTutor().getSelectedItem() != null) {
-            listaRET.add(gsRET.nuevoRolEnTrabajo((Profesor) this.ventana.getjComboTutor().getSelectedItem(), Rol.TUTOR, fechaP));
+            listaRET.add(gsRET.nuevoRolEnTrabajo((Profesor) this.ventana.getjComboTutor().getSelectedItem(), Rol.TUTOR, fechaPres));
         }
         //Cotutor
-        int dniCo;
         if (this.ventana.getjComboCotutor().getSelectedItem() != null) {
-            listaRET.add(gsRET.nuevoRolEnTrabajo((Profesor) this.ventana.getjComboCotutor().getSelectedItem(), Rol.COTUTOR, fechaP));
+            listaRET.add(gsRET.nuevoRolEnTrabajo((Profesor) this.ventana.getjComboCotutor().getSelectedItem(), Rol.COTUTOR, fechaPres));
         }
         
         //Alumnos en trabajo
         List<AlumnoEnTrabajo> listaAET = new ArrayList<>();
+        
         int[] seleccionadosAl = this.ventana.getjTablaAlumnos().getSelectedRows();
         for(int i : seleccionadosAl){
-            String cxAl;
-            cxAl = this.ventana.getjTablaAlumnos().getValueAt(i, 1).toString();
-            listaAET.add(gsAET.nuevoAlumnoEnTrabajo(gsP.dameAlumno(cxAl), fechaP));
+            String cxAl = this.ventana.getjTablaAlumnos().getValueAt(i, 1).toString();
+            listaAET.add(gsAET.nuevoAlumnoEnTrabajo(gsP.dameAlumno(cxAl), fechaPres));
         }
         
         //Tratar de crearlo
-        String resultado = gsT.nuevoTrabajo(titulo, duracion, fechaP, fechaA, listaAreas, listaRET, listaAET);
+        String resultado = gsT.nuevoTrabajo(titulo, duracion, fechaPres, fechaAp, listaAreas, listaRET, listaAET);
         if (!resultado.equals(EXITO)) { //No se pudo crear un trabajo
             JOptionPane.showMessageDialog(this.ventana, resultado, "", JOptionPane.WARNING_MESSAGE);
             this.colorTxtDuracion();    //resalta en rojo los errores mas obvios
@@ -367,11 +391,12 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         this.ventana.dispose();
     }
     
+    /**
+     * Agrega listeners a cada elemento de la ventana, recuadrandolo
+     * Recuadra en rojo cuando sea incorrecto
+     * Recuadra en gris cuando sea valido
+     */ 
     private void agregarListeners(){
-        //-----------------------------------------------------------------------------------//
-        //Agrego listeners a los elementos de la ventana para marcar en rojo cuando esten mal//
-        //-----------------------------------------------------------------------------------//
-       
         //Listener de txtTitulo
         this.ventana.getTxtTitulo().addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
@@ -410,18 +435,21 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             }
         });
         
+        //Listener fechaAprobacion
         this.ventana.getjFechaAprobacion().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
             if ("date".equals(e.getPropertyName())) {
                 colorCalendarios();
             }
         });
         
+        //Listener fechaPresentacion
         this.ventana.getjFechaPresentacion().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
             if ("date".equals(e.getPropertyName())) {
                 colorCalendarios();
             }
         });
         
+        //Listener fechaFinalizacion
         this.ventana.getjFechaFinalizacion().getDateEditor().addPropertyChangeListener((PropertyChangeEvent e) -> {
             if ("date".equals(e.getPropertyName())) {
                 colorCalendarios();
@@ -491,6 +519,12 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
         }
     }
     
+    /**
+     * Obtiene la fecha de un campo JDateChooser
+     * Si no hay seleccionada una fecha devuelve null
+     * @param dateChooser campo JDateChooser
+     * @return LocalDate - fecha de un campo JDateChooser
+     */
     private LocalDate obtenerFechaDeJDateChooser(JDateChooser dateChooser) {        //Convierte a LocalDate la fecha obtenida del JDateChooser
         Date date;
         if (dateChooser.getCalendar() != null) {
@@ -501,63 +535,81 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             return null;
     }
     
+    /**
+     * Le da color al borde del campo txtTitulo de VentanaAMTrabajos
+     */
     private void colorTxtTitulo(){
         if (this.ventana.getTxtTitulo().getText().trim().isEmpty()) {
-            this.ventana.getTxtTitulo().setBorder(BorderFactory.createLineBorder(Color.RED, 2)); //si el campo de texto esta vacio,se resalta en rojo
+            this.ventana.getTxtTitulo().setBorder(BorderFactory.createLineBorder(Color.RED, 1)); //si el campo de texto esta vacio,se resalta en rojo
         }else{
             this.ventana.getTxtTitulo().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
         }
     }
     
+    /**
+     * Le da color al borde del campo txtDuracion de VentanaAMTrabajos
+     */
     private void colorTxtDuracion(){
         if (this.ventana.getTxtDuracion().getText().trim().isEmpty()) {
-            this.ventana.getTxtDuracion().setBorder(BorderFactory.createLineBorder(Color.RED, 2)); //si el campo de texto esta vacio,se resalta en rojo
+            this.ventana.getTxtDuracion().setBorder(BorderFactory.createLineBorder(Color.RED, 1)); //si el campo de texto esta vacio,se resalta en rojo
         }else{
             this.ventana.getTxtDuracion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); //si el campo no esta vacio, elborde se vuleve gris(no verde o algo por el estilo,pues no se esta seguro que el valor es correcto
         }
     }
     
+    /**
+     * Le da color a la fila seleccionada del campo tablaAreas de VentanaAMTrabajos
+     */
     private void colorAreas(){
         if (this.ventana.getjTablaAreas().getSelectedRows().length < 1) {   //si se selecciona menos de un area se resalta en rojo la tabla
-            this.ventana.getjTablaAreas().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            this.ventana.getjTablaAreas().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.getjTablaAreas().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
     
+    /**
+     * Le da color a la fila seleccionada del campo tablaAlumnos de VentanaAMTrabajos
+     */
     private void colorAlumnos(){
         if (this.ventana.getjTablaAlumnos().getSelectedRows().length < 1) {   //si se selecciona menos de un alumno se resalta en rojo la tabla
-            this.ventana.getjTablaAlumnos().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            this.ventana.getjTablaAlumnos().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.getjTablaAlumnos().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
     
+    /**
+     * Le da color a la fila seleccionada del campo tablaJurados de VentanaAMTrabajos
+     */
     private void colorJurados(){
         if (this.ventana.getjTablaJurado().getSelectedRows().length < 3 ||this.ventana.getjTablaJurado().getSelectedRows().length > 3) {   //si se selecciona menos o mas de 3 jurados se resalta en rojo la tabla
-                this.ventana.getjTablaJurado().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                this.ventana.getjTablaJurado().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.getjTablaJurado().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
     }
     
+    /**
+     * Le da color al borde de los campos dateChooser de VentanaAMTrabajos
+     */
     private void colorCalendarios(){
 
         if (this.ventana.getjFechaPresentacion().getCalendar() == null) {
-            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.getjFechaPresentacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
         
         if (this.ventana.getjFechaAprobacion().getCalendar() == null || this.ventana.getjFechaPresentacion().getDate().compareTo(this.ventana.getjFechaAprobacion().getDate()) > 0) {
-            this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
         }else{
             this.ventana.getjFechaAprobacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         }
         
         if(this.ventana.getjFechaFinalizacion().isEnabled()){
             if(this.ventana.getjFechaFinalizacion().getCalendar() == null || this.ventana.getjFechaAprobacion().getDate().compareTo(this.ventana.getjFechaFinalizacion().getDate()) > 0){
-                this.ventana.getjFechaFinalizacion().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                this.ventana.getjFechaFinalizacion().setBorder(BorderFactory.createLineBorder(Color.RED, 1));
             }else{
                 this.ventana.getjFechaFinalizacion().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
             }

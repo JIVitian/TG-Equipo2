@@ -8,7 +8,6 @@ package gui.seminarios.modelos;
 import gui.trabajos.modelos.GestorTrabajos;
 import gui.trabajos.modelos.Trabajo;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**

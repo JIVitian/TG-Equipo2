@@ -194,11 +194,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                     if(t.verAlumnos().contains(aet1)){
                         return ERROR_ALUMNOS;
                     }
-//                    for(AlumnoEnTrabajo aet2 : t.verAlumnos()){
-//                        if (aet1.verAlumno().equals(aet2.verAlumno())) {
-//                            return ERROR_ALUMNOS;
-//                        }
-//                    }
                 }
             }
         }
@@ -228,7 +223,6 @@ public class GestorTrabajos implements IGestorTrabajos {
             return DUPLICADOS;
         }
         
-//        ordenar(this.trabajos);
         Collections.sort(this.trabajos);
 
         String resultado = this.escribirArchivo();
@@ -239,25 +233,6 @@ public class GestorTrabajos implements IGestorTrabajos {
         return resultado;
     }
     
-//    /**
-//     * Ordena una lista de trabajos en forma descendente segun fecha de presentacion. 
-//     * En caso de haber 2 trabajos con la misma fecha de presentación, 
-//     * estos dos se ordenaran según el título ascendentemente.
-//     * @param lista lista de trabajos que se desea ordenar
-//     */
-//    public void ordenar(List<Trabajo> lista){
-//            Comparator<Trabajo> tComp = new Comparator<Trabajo>() {
-//                public int compare(Trabajo t1, Trabajo t2) {//Defino como voy a ordenar a la lista.
-//                    if (t1.verFechaPresentacion().compareTo(t2.verFechaPresentacion()) != 0) {//Si los apellidos son distintos no hay problema
-//                        return -t1.verFechaPresentacion().compareTo(t2.verFechaPresentacion());
-//                    } else {//Si dos apellidos son iguales, comparare los nombres.
-//                        return t1.verTitulo().toUpperCase().compareTo(t2.verTitulo().toUpperCase());
-//                    }
-//                }
-//            };
-//            Collections.sort(lista, tComp);
-//    }
-       
     /**
      * Busca si existe un trabajo con el título especificado (total o parcialmente)
      * Si no se especifica un título, devuelve todos los trabajos
@@ -363,11 +338,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                     aet.asignarFechaHasta(fechaFinalizacion);
                     aet.asignarRazon(TRABAJO_FINALIZACION);
                 }
-//                    aet.asignarFechaHasta(fechaFinalizacion);
-////                if (aet.verRazon().equals(VALORES_NULOS)) {
-////                    aet.asignarRazon(TRABAJO_FINALIZACION);
-////                }
-//                    aet.asignarRazon(TRABAJO_FINALIZACION);
             });
 
             String resultado = this.escribirArchivo();
@@ -392,13 +362,8 @@ public class GestorTrabajos implements IGestorTrabajos {
         }
         
         if (this.trabajos.contains(trabajo)) {
-            
-            
-//            this.cancelar();
-
             this.trabajos.remove(trabajo);
-            //        this.ultimoTrabajo = this.trabajos.size()-1; //Ultimo trabajo en la lista
-//            ordenar(this.trabajos);
+            
             Collections.sort(this.trabajos);
             if (this.trabajos.size()>0) {   //si quedan trabajos
                 this.ultimoTrabajo = 1;     //se selecciona el primer trabajo de la lista 
@@ -430,7 +395,7 @@ public class GestorTrabajos implements IGestorTrabajos {
                 return TRABAJO_REEMPLAZAR_PROFESOR_ERROR;
             }
             if (fechaHasta == null) {
-                    return ERROR_FECHA_EXPOSICION;
+                return ERROR_FECHA_EXPOSICION;
             }
             //VERIFICO QUE EL NUEVO PROFESOR NO ESTE YA EN EL TRABAJO
             for (RolEnTrabajo ret : trabajo.verProfesoresConRoles()) {
@@ -476,9 +441,6 @@ public class GestorTrabajos implements IGestorTrabajos {
     @Override
     public String finalizarAlumno(Trabajo trabajo, Alumno alumno, LocalDate fechaHasta, String razon) {
         if (this.trabajos.contains(trabajo)) {
-//          if (trabajo.verAlumnos().isEmpty()) {
-//              return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE; //Esto se controla al crear un nuevo trabajo
-//          }
             if (alumno == null) {
                 this.cancelar();
                 return TRABAJO_FINALIZAR_ALUMNO_ERROR;
@@ -512,10 +474,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                     }
                     return resultado;
                 }
-//                } else {
-//                    this.cancelar();
-//                    return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE;
-//                }
             }
             this.cancelar();
             return TRABAJO_FINALIZAR_ALUMNO_INEXISTENTE;
@@ -598,14 +556,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                         String nombreArea = vector[i++];
                         listaAreas.add(ga.dameArea(nombreArea));
                     }
-//                    String cadenaAreas = vector[3];
-//                    String[] vectorArea = cadenaAreas.split(Character.toString(SEPARADOR_INTERNO));
-//                    
-//                    List<Area> listaAreas = new ArrayList<>();
-//                    for (int i = 0; i < cantAreas; i++) {
-//                        String nombreArea = vectorArea[i];
-//                        listaAreas.add(ga.dameArea(nombreArea));
-//                    }
                     
                     //LEO Y CONVIERTO LA FECHA A LOCALDATE
                     int posFechaP = 3 + cantAreas;
@@ -665,43 +615,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                         }
                     }
                     
-//                    String cadenaProfesoresConRoles = vector[posPrimerProf];
-//                    String[] vectorRET = cadenaProfesoresConRoles.split(Character.toString(SEPARADOR_INTERNO));
-//
-//                    for (int i = 0; i < cantProfesoresConRoles; i++) {
-//                        String cadenaParamRET = vectorRET[i];
-//                        String cadenaParamRET = vectorRET[i];
-//                        String[] vectorParamRET = cadenaParamRET.split(Character.toString(SEPARADOR_PARAMETRO));
-//                        
-//                        String cadenaDNI = vectorParamRET[0];
-//                        int retDNI = Integer.parseInt(cadenaDNI);
-//                        
-//                        var cadenaRol = vectorParamRET[1];
-//                        Rol retRol = this.convertirStringARol(cadenaRol);
-//                        
-//                        String cadenaFechaDesde = vectorParamRET[2];
-//                        LocalDate fechaDesde = this.convertirStringAFecha(cadenaFechaDesde);
-//                        
-//                        String cadenaFechaHasta = vectorParamRET[3];
-//                        LocalDate fechaHasta = null;
-//                        if (!cadenaFechaHasta.equals(VALORES_NULOS)) {
-//                            fechaHasta = this.convertirStringAFecha(cadenaFechaHasta);
-//                        }
-//                        
-//                        String cadenaRazon = vectorParamRET[4];
-//                        if (cadenaRazon.equals(VALORES_NULOS)) {
-//                            cadenaRazon = null;
-//                        }
-//                        
-//                        if (fechaHasta == null || cadenaRazon == null) {
-//                            listaRET.add(gRet.nuevoRolEnTrabajo(gsP.dameProfesor(retDNI), retRol, fechaDesde));
-//                        } else {
-//                            listaRET.add(new RolEnTrabajo(gsP.dameProfesor(retDNI), retRol, fechaDesde, fechaHasta, cadenaRazon));
-//                        }
-//                    }
-                    
-                    
-                    
                     //LEO LA CANTIDAD DE AET QUE HAY Y LA CONVIERTO A INT
                     int posCantAlumnos = posPrimerProf + cantProfes * 5;
                     String cadenaCantAlumnos = vector[posCantAlumnos];
@@ -710,7 +623,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                     //LEO LOS AET, LOS SEPARO Y LUEGO CONVIERTO SUS PARAMETROS PARA AGREGARLOS A UNA LIST
                     int posPrimerAlumno = posCantAlumnos + 1;
 
-                    
                     List<AlumnoEnTrabajo> listaAET = new ArrayList<>();
                     for (int i = posPrimerAlumno; i < posPrimerAlumno + (cantAlumnos * 4); ) {
                         String cadenaCX = vector[i++];
@@ -735,35 +647,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                             listaAET.add(new AlumnoEnTrabajo(gsP.dameAlumno(cadenaCX), fechaDesde, fechaHasta, cadenaRazon));
                         }
                     }
-                    
-//                    String cadenaAlumnos = vector[10];
-//                    String[] vectorAET = cadenaAlumnos.split(Character.toString(SEPARADOR_INTERNO));
-//                    for (int i = 0; i < cantAlumnos; i++) {
-//                        String cadenaParamAET = vectorAET[i];
-//                        String[] vectorParamAET = cadenaParamAET.split(Character.toString(SEPARADOR_PARAMETRO));
-//                        
-//                        String cadenaCX = vectorParamAET[0];
-//                        
-//                        String cadenaFechaDesde = vectorParamAET[1];
-//                        LocalDate fechaDesde = this.convertirStringAFecha(cadenaFechaDesde);
-//                        
-//                        String cadenaFechaHasta = vectorParamAET[2];
-//                        LocalDate fechaHasta = null;
-//                        if (!cadenaFechaHasta.equals(VALORES_NULOS)) {
-//                            fechaHasta = this.convertirStringAFecha(cadenaFechaHasta);
-//                        }
-//                        
-//                        String cadenaRazon = vectorParamAET[3];
-//                        if (cadenaRazon.equals(VALORES_NULOS)) {
-//                            cadenaRazon = null;
-//                        }
-//                        
-//                        if (fechaHasta == null || cadenaRazon == null) {
-//                            listaAET.add(gAet.nuevoAlumnoEnTrabajo(gsP.dameAlumno(cadenaCX), fechaDesde));
-//                        } else {
-//                            listaAET.add(new AlumnoEnTrabajo(gsP.dameAlumno(cadenaCX), fechaDesde, fechaHasta, cadenaRazon));
-//                        }
-//                    }
                     
                     Trabajo unTrabajo = new Trabajo(cadenaTitulo, duracion, listaAreas, 
                                                     fechaPresentacion, fechaAprobacion, fechaFinalizacion, 
@@ -798,20 +681,13 @@ public class GestorTrabajos implements IGestorTrabajos {
                 cadena += Integer.toString(unTrabajo.verDuracion()) + SEPARADOR;
                 
                 //ESCRIBO LA CANTIDAD DE AREAS QUE TIENE EL TRABAJO
-                //SI HAY MAS DE UN AREA, LAS ESCRIBO CON UN SEPARADOR DISTINTO
                 int cantAreas = unTrabajo.verAreas().size();
                 cadena += cantAreas;
                 
+                //ESCRIBO LAS AREAS
                 for (int i = 0; i < cantAreas; i++) {
                     cadena += SEPARADOR + unTrabajo.verAreas().get(i).verNombre();
                 }
-//                for (int i = 0; i < cantAreas; i++) {
-//                    if (i == 0) {
-//                        cadena += SEPARADOR + unTrabajo.verAreas().get(i).verNombre();
-//                    } else {
-//                        cadena += SEPARADOR_INTERNO + unTrabajo.verAreas().get(i).verNombre();
-//                    }
-//                }
                 cadena += SEPARADOR;
                 
                 //CONVIERTO A STRING LA fechaPresentacion DANDOLE EL FORMATO PATRON Y LUEGO ESCRIBO
@@ -831,7 +707,7 @@ public class GestorTrabajos implements IGestorTrabajos {
                     cadena += VALORES_NULOS + SEPARADOR;
                 }
                 
-                //ESCRIBO CADA RolEnTrabajo CON UN SEPARADOR DISTINTO
+                //UTILIZO AUXILIARES PARA DETERMINAR LA CANTIDAD DE CADA ROL
                 int cantTutor = 0;
                 int cantCotutor = 0;
                 int cantJurado = 0;
@@ -848,10 +724,11 @@ public class GestorTrabajos implements IGestorTrabajos {
                     }
                 }
                 
+                //ESCRIBO LA CANTIDAD DE PROFESORES CON ROL EN TRABAJO
                 int cantRET = cantTutor + cantCotutor + cantJurado;
-//                int cantRET = unTrabajo.cantidadProfesoresConRol();
                 cadena += Integer.toString(cantRET) + SEPARADOR;
 
+                //ESCRIBO CADA ROL EN TRABAJO
                 for (int i = 0; i < cantRET; i++) {
                     cadena += Integer.toString(unTrabajo.verProfesoresConRoles().get(i).verProfesor().verDNI()) + SEPARADOR;
                     cadena += unTrabajo.verProfesoresConRoles().get(i).verRol().toString() + SEPARADOR;
@@ -877,45 +754,12 @@ public class GestorTrabajos implements IGestorTrabajos {
                         cadena += VALORES_NULOS + SEPARADOR;
                     }
                 }
-//                for (int i = 0; i < cantRET; i++) {
-//                    cadena += Integer.toString(unTrabajo.verProfesoresConRoles().get(i).verProfesor().verDni()) + SEPARADOR_PARAMETRO;
-//                    cadena += unTrabajo.verProfesoresConRoles().get(i).verRol().toString().toLowerCase() + SEPARADOR_PARAMETRO;
-//                    
-//                    //CONVIERTO A STRING LA fechaAprobacion DANDOLE EL FORMATO PATRON Y LUEGO ESCRIBO
-//                    String fechaDesde = unTrabajo.verProfesoresConRoles().get(i).verFechaDesde().format(DateTimeFormatter.ofPattern(PATRON_FECHAS));
-//                    cadena += fechaDesde + SEPARADOR_PARAMETRO;
-//                    
-//                    //CONVIERTO A STRING LA fechaHasta DANDOLE EL FORMATO PATRON Y LUEGO ESCRIBO
-//                    //LA fechaHasta PUEDE SER O NO NULL
-//                    if (unTrabajo.verProfesoresConRoles().get(i).verFechaHasta() != null) {
-//                        String fechaHasta = unTrabajo.verProfesoresConRoles().get(i).verFechaHasta().format(DateTimeFormatter.ofPattern(PATRON_FECHAS));
-//                        cadena += fechaHasta + SEPARADOR_PARAMETRO;
-//                    } else {
-//                        cadena += VALORES_NULOS + SEPARADOR_PARAMETRO;
-//                    }
-//                    
-//                    //SI LA RAZON ES NULL ESCRIBO UN -, SINO LA ESCRIBO
-//                    //SI LLEGO AL FIN DE LOS RET, ESCRIBO PERO SIN SEPARADOR
-//                    if (unTrabajo.verProfesoresConRoles().get(i).verRazon() != null) {
-//                        if (unTrabajo.verProfesoresConRoles().indexOf(unTrabajo.verProfesoresConRoles().get(i)) != unTrabajo.verProfesoresConRoles().size()) {
-//                            cadena += unTrabajo.verProfesoresConRoles().get(i).verRazon() + SEPARADOR_INTERNO;
-//                        } else {
-//                            cadena += unTrabajo.verProfesoresConRoles().get(i).verRazon();
-//                        }
-//                    } else {
-////                        if (unTrabajo.verProfesoresConRoles().indexOf(unTrabajo.verProfesoresConRoles().get(i)) != unTrabajo.verProfesoresConRoles().size()) {
-//                        if (unTrabajo.verProfesoresConRoles().indexOf(unTrabajo.verProfesoresConRoles().get(i)) != cantRET - 1) {
-//                            cadena += VALORES_NULOS + SEPARADOR_INTERNO;
-//                        } else {
-//                            cadena += VALORES_NULOS;
-//                        }
-//                    }
-//                }
                 
-                //ESCRIBO CADA AlumnoEnTrabajo CON UN SEPARADOR DISTINTO
+                //ESCRIBO LA CANTIDAD DE ALUMNOS EN TRABAJO
                 int cantAET = unTrabajo.verAlumnos().size();
                 cadena += Integer.toString(cantAET) + SEPARADOR;
                 
+                //ESCRIBO CADA ALUMNO EN TRABAJO
                 for (int i = 0; i < cantAET; i++) {
                     cadena += unTrabajo.verAlumnos().get(i).verAlumno().verCX() + SEPARADOR;
                     
@@ -949,39 +793,6 @@ public class GestorTrabajos implements IGestorTrabajos {
                         }
                     }
                 }
-//                for (int i = 0; i < cantAET; i++) {
-//                    cadena += unTrabajo.verAlumnos().get(i).verAlumno().verCX() + SEPARADOR_PARAMETRO;
-//                    
-//                    //CONVIERTO A STRING LA fechaAprobacion DANDOLE EL FORMATO PATRON Y LUEGO ESCRIBO
-//                    String fechaDesde = unTrabajo.verAlumnos().get(i).verFechaDesde().format(DateTimeFormatter.ofPattern(PATRON_FECHAS));
-//                    cadena += fechaDesde + SEPARADOR_PARAMETRO;
-//                    
-//                    //CONVIERTO A STRING LA fechaHasta DANDOLE EL FORMATO PATRON Y LUEGO ESCRIBO
-//                    //LA fechaHasta PUEDE SER O NO NULL
-//                    if (unTrabajo.verAlumnos().get(i).verFechaHasta() != null) {
-//                        String fechaHasta = unTrabajo.verAlumnos().get(i).verFechaHasta().format(DateTimeFormatter.ofPattern(PATRON_FECHAS));
-//                        cadena += fechaHasta + SEPARADOR_PARAMETRO;
-//                    } else {
-//                        cadena += VALORES_NULOS + SEPARADOR_PARAMETRO;
-//                    }
-//                    
-//                    //SI LA RAZON ES NULL ESCRIBO UN -, SINO LA ESCRIBO
-//                    //SI LLEGO AL FIN DE LOS AET, ESCRIBO PERO SIN SEPARADOR
-//                    if (unTrabajo.verAlumnos().get(i).verRazon() != null) {
-//                        if (unTrabajo.verAlumnos().indexOf(unTrabajo.verAlumnos().get(i)) != unTrabajo.verAlumnos().size()) {
-//                            cadena += unTrabajo.verAlumnos().get(i).verRazon() + SEPARADOR_INTERNO;
-//                        } else {
-//                            cadena += unTrabajo.verAlumnos().get(i).verRazon();
-//                        }
-//                    } else {
-////                        if (unTrabajo.verAlumnos().indexOf(unTrabajo.verAlumnos().get(i)) != unTrabajo.verAlumnos().size()) {
-//                        if (unTrabajo.verAlumnos().indexOf(unTrabajo.verAlumnos().get(i)) != cantAET - 1) {
-//                            cadena += VALORES_NULOS + SEPARADOR_INTERNO;
-//                        } else {
-//                            cadena += VALORES_NULOS;
-//                        }
-//                    }
-//                }
                 
                 bw.write(cadena);
                 bw.newLine();
@@ -1011,5 +822,4 @@ public class GestorTrabajos implements IGestorTrabajos {
             default: return Rol.JURADO;
         }
     }
-    
 }

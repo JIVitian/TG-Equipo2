@@ -6,6 +6,7 @@
 package gui.seminarios.modelos;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Seminario implements Comparable<Seminario>{
     private LocalDate fechaExposicion;
@@ -65,6 +66,28 @@ public class Seminario implements Comparable<Seminario>{
         this.observaciones = observaciones;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.fechaExposicion);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Seminario other = (Seminario) obj;
+        return Objects.equals(this.fechaExposicion, other.fechaExposicion);
+    }
+    
     @Override
     public int compareTo(Seminario s) {
         return this.fechaExposicion.compareTo(s.fechaExposicion); //COMPARA SEGUN LA FECHA DE EXP
