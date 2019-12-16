@@ -32,7 +32,6 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -103,9 +102,9 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             
             //FechaPresentacion
             //Pone automaticamente como sugerencia la fecha de hoy
-            LocalDate fechaP = LocalDate.now();
-            Date fechaPresentacion = Date.from(fechaP.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            this.ventana.getjFechaPresentacion().setDate(fechaPresentacion);
+            LocalDate fechaAp = LocalDate.now();
+            Date fechaAprobacion = Date.from(fechaAp.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.ventana.getjFechaAprobacion().setDate(fechaAprobacion);
             
             //Deshabilito el dateChooser de fechaFinalizacion
             this.ventana.getjFechaFinalizacion().setEnabled(false);
@@ -139,17 +138,10 @@ public class ControladorAMTrabajo implements IControladorAMTrabajo{
             this.ventana.getjFechaAprobacion().setEnabled(false);
 
             //FechaFinalizacion
-            if(fechaAprobacion.compareTo(Date.from(Instant.now())) < 0){
-                //Muestro la fecha actual como referencia en el dateChooser de fechaFinalizacion
-                this.ventana.getjFechaFinalizacion().setDate(Date.from(Instant.now()));
-            }else{
-                //Muestro la fechaAprobacion como referencia en el dateChooser de fechaFinalizacion
-                this.ventana.getjFechaFinalizacion().setDate(fechaAprobacion);
-            }
             //Pone automaticamente como sugerencia la fecha de hoy
-//            LocalDate fechaF = LocalDate.now();
-//            Date fechaFinalizacion = Date.from(fechaF.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//            this.ventana.getjFechaFinalizacion().setDate(fechaAprobacion);
+            LocalDate fechaHoy = LocalDate.now();
+            Date fechaActual = Date.from(fechaHoy.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.ventana.getjFechaFinalizacion().setDate(fechaActual);
             
             //Areas
             List<Area> listaAreas = this.unTrabajo.verAreas();

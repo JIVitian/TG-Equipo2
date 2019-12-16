@@ -1,9 +1,10 @@
-asdasd;asdasd;25252525;TITULAR
 Bardin;Fabio Alejandro;21456789;JTP
 Guzman;Fernanda;20145632;TITULAR
 Lothbrok;Ragnar;12456378;TITULAR
 Nieto;Luis;23145632;TITULAR
+Orellana;Profesora;25252525;TITULAR
 Plaza;Nadia;21456321;ASOCIADO
 Polo;Marco;1258946;TITULAR
 Tannure;Gaston;21456325;JTP
+Vitriu;Silvina;65775645;ASOCIADO
 Younes;dawqaw;15478965;ASOCIADO

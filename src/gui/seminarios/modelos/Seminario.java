@@ -8,7 +8,7 @@ package gui.seminarios.modelos;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Seminario implements Comparable<Seminario>{
+public class Seminario implements Comparable<Seminario> {
     private LocalDate fechaExposicion;
     private NotaAprobacion notaAprobacion;
     private String observaciones;

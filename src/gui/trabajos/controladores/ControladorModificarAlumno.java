@@ -17,7 +17,6 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -61,14 +60,18 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         //Muestro y desabilito la fechaDesde
         this.ventana.verFechaDesde().setDate(fechaDesde);
         this.ventana.verFechaDesde().setEnabled(false);
-
-        if(fechaDesde.compareTo(Date.from(Instant.now())) < 0){
-            //Muestro la fecha actual como referencia en el dateChooser de fechaHasta
-            this.ventana.verFechaHasta().setDate(Date.from(Instant.now()));
-        }else{
-            //Muestro la fechaDesde como referencia en el dateChooser de fechaHasta
+        
+//        //Muestro la fechaDesde como referencia en el dateChooser de fechaHasta
+//        this.ventana.verFechaHasta().setDate(fechaDesde);
+        //Muestro la fecha actual como referencia en el dateChooser de fechaHasta
+        LocalDate fechaHoy = LocalDate.now();
+        Date fechaActual = Date.from(fechaHoy.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        if (fechaDesde.before(fechaActual)) {
+            this.ventana.verFechaHasta().setDate(fechaActual);
+        } else {
             this.ventana.verFechaHasta().setDate(fechaDesde);
         }
+        
     }
     
     /**
@@ -228,9 +231,9 @@ public class ControladorModificarAlumno implements IControladorModificarAlumno {
         }
     }
     
-    /**
-     * Le da color al borde del campo txtRazon de VentanaModificarAlumno
-     */
+//    /**
+//     * Le da color al borde del campo txtRazon de VentanaModificarAlumno
+//     */
 //    private void colorTxtRazon(){
 //        if (this.ventana.verTxtRazon().getText().trim().isEmpty()) {
 //            this.ventana.verTxtRazon().setBorder(BorderFactory.createLineBorder(Color.RED, 1)); //si el campo de texto esta vacio,se resalta en rojo

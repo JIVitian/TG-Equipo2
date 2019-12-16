@@ -191,7 +191,7 @@ public class GestorTrabajos implements IGestorTrabajos {
         for(AlumnoEnTrabajo aet1 : aet){
             for(Trabajo t : this.trabajos){
                 if (t.verFechaFinalizacion() == null) {
-                    if(t.verAlumnos().contains(aet1)){
+                    if(t.verAlumnosActuales().contains(aet1)){
                         return ERROR_ALUMNOS;
                     }
                 }
